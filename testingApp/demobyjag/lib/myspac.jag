@@ -1,0 +1,12 @@
+<%
+
+describe('Test Suite One', function() {
+        it('first Test', function() {
+                expect("Hello world!").toEqual("Hello world!");
+        });
+        it('second Test', function() {
+            expect(1).toBe(1);
+    });
+});
+
+%>

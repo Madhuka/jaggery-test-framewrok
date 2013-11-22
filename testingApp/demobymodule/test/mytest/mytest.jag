@@ -1,0 +1,46 @@
+<%
+
+var test = require("test");
+
+
+test.describe('#Test Suite One', function() {
+	test.beforeEach(function() {
+	    // I'm assuming the usage a JSDOM here
+	   log.info("each before--------------------------+++++++");
+	  });
+/* 	test.it('1.first Test', function() {
+		test.expect("Hello world!").toEqual("Hello world!");
+		test.expect(10).toEqual(10);
+	}); */
+	test.it('2. second Test', function() {
+		test.expect(1).toBe(1);
+		test.expect(1).toBe(1);
+		test.expect(1).toBe(1);
+	});
+	/* test.it('3. second Test', function() {
+		test.expect(2).toBe(2);
+	});
+	test.it('4. second Test', function() {
+		test.expect(21).toBe(21);
+	});
+	test.it('5. second Test', function() {
+		test.expect(21).toBe(21);
+	});
+	test.it('6. second Test', function() {
+		test.expect(1).toBe(21);
+	}); */
+
+
+});
+
+
+
+var log = new Log();
+
+	
+
+include ('../excuter.jag');
+
+
+
+%>
