@@ -2,35 +2,47 @@
 
 var test = require("test");
 
-
-test.describe('#Test Suite One', function() {
+test.describe('TestSuiteOne', function() {
+	
+	var returnValue = 0;
 	test.beforeEach(function() {
-	    // I'm assuming the usage a JSDOM here
-	   log.info("each before--------------------------+++++++");
-	  });
-/* 	test.it('1.first Test', function() {
-		test.expect("Hello world!").toEqual("Hello world!");
+		log.info("each before--------------------------+++++++");
+		returnValue = returnValue +1;
+	});
+	test.it('1.firstTest', function() {
+		test.expect("Hello worldx!").toEqual("Hello world!");
 		test.expect(10).toEqual(10);
-	}); */
-	test.it('2. second Test', function() {
+	});
+	/* test.it('2. second Test', function() {
 		test.expect(1).toBe(1);
-		test.expect(1).toBe(1);
+		test.expect(returnValue).toBe(2);
+		test.expect("Hello world!").toEqual("Hello world!");
 		test.expect(1).toBe(1);
 	});
-	/* test.it('3. second Test', function() {
+	test.it('3. second Test', function() {
 		test.expect(2).toBe(2);
 	});
 	test.it('4. second Test', function() {
 		test.expect(21).toBe(21);
 	});
-	test.it('5. second Test', function() {
+	test.xit('5. second Test', function() {
 		test.expect(21).toBe(21);
 	});
-	test.it('6. second Test', function() {
-		test.expect(1).toBe(21);
+	test.xit('6. second Test', function() {
+		test.expect(returnValue).toBe(6);
 	}); */
 
 
+		test.describe("Aspec", function() {
+
+			test.it("is just a function, so it can contain any code", function() {
+				test.expect(1).toEqual(1);
+			});
+			test.it("is just a function, so it can contain any code", function() {
+				test.expect(1).toEqual(1);
+			});
+		});
+		
 });
 
 

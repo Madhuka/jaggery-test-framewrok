@@ -1,10 +1,7 @@
 <%
 
 	var jasmineEnv = test.jasmine.getEnv();
-	test.jasmineEnv.updateInterval = 10;
-	var thread = java.Thread.currentThread;
-//	log.info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx thread');
-	log.info(thread.getId);
+	test.jasmineEnv.updateInterval = 10;	
 	var jsonReporter = new test.jasmine.JSONReporter();
 	test.jasmineEnv.addReporter(jsonReporter);
 	
@@ -12,4 +9,5 @@
 	function execJasmine() {
 		test.jasmineEnv.execute();
 	}
+	
 %>
