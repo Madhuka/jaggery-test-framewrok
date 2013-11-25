@@ -1,10 +1,14 @@
 <module name="test" xmlns="http://wso2.org/projects/jaggery/module.xml">
     <script>
         <name>test</name>
-        <path>scripts/engine/test.js</path>
+        <path>scripts/engine/jasmine.js</path>
     </script>
-     <script>
+	<script>
+        <name>jasmine-wrapper</name>
+        <path>scripts/engine/wrapper.js</path>
+    </script>
+    <script>
         <name>jsonReport</name>
         <path>scripts/report/json.js</path>
-    </script>
+    </script>	
 </module>

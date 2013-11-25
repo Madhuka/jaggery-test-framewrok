@@ -1,6 +1,4 @@
-var log = new Log();
-
-var isCommonJS = typeof window == "undefined" && typeof exportsx == "object";
+var isCommonJS = typeof window == "undefined" && typeof exports == "object";
 
 /**
  * Top level namespace for Jasmine, a lightweight JavaScript BDD/spec/testing framework.
@@ -8,7 +6,7 @@ var isCommonJS = typeof window == "undefined" && typeof exportsx == "object";
  * @namespace
  */
 var jasmine = {};
-if (isCommonJS) exportsx.jasmine = jasmine;
+if (isCommonJS) exports.jasmine = jasmine;
 /**
  * @private
  */
@@ -482,7 +480,7 @@ jasmine.log = function() {
 var spyOn = function(obj, methodName) {
   return jasmine.getEnv().currentSpec.spyOn(obj, methodName);
 };
-if (isCommonJS) exportsx.spyOn = spyOn;
+if (isCommonJS) exports.spyOn = spyOn;
 
 /**
  * Creates a Jasmine spec that will be added to the current suite.
@@ -500,7 +498,7 @@ if (isCommonJS) exportsx.spyOn = spyOn;
 var it = function(desc, func) {
   return jasmine.getEnv().it(desc, func);
 };
-if (isCommonJS) exportsx.it = it;
+if (isCommonJS) exports.it = it;
 
 /**
  * Creates a <em>disabled</em> Jasmine spec.
@@ -513,7 +511,7 @@ if (isCommonJS) exportsx.it = it;
 var xit = function(desc, func) {
   return jasmine.getEnv().xit(desc, func);
 };
-if (isCommonJS) exportsx.xit = xit;
+if (isCommonJS) exports.xit = xit;
 
 /**
  * Starts a chain for a Jasmine expectation.
@@ -527,7 +525,7 @@ if (isCommonJS) exportsx.xit = xit;
 var expect = function(actual) {
   return jasmine.getEnv().currentSpec.expect(actual);
 };
-if (isCommonJS) exportsx.expect = expect;
+if (isCommonJS) exports.expect = expect;
 
 /**
  * Defines part of a jasmine spec.  Used in cominbination with waits or waitsFor in asynchrnous specs.
@@ -537,7 +535,7 @@ if (isCommonJS) exportsx.expect = expect;
 var runs = function(func) {
   jasmine.getEnv().currentSpec.runs(func);
 };
-if (isCommonJS) exportsx.runs = runs;
+if (isCommonJS) exports.runs = runs;
 
 /**
  * Waits a fixed time period before moving to the next block.
@@ -548,7 +546,7 @@ if (isCommonJS) exportsx.runs = runs;
 var waits = function(timeout) {
   jasmine.getEnv().currentSpec.waits(timeout);
 };
-if (isCommonJS) exportsx.waits = waits;
+if (isCommonJS) exports.waits = waits;
 
 /**
  * Waits for the latchFunction to return true before proceeding to the next block.
@@ -560,7 +558,7 @@ if (isCommonJS) exportsx.waits = waits;
 var waitsFor = function(latchFunction, optional_timeoutMessage, optional_timeout) {
   jasmine.getEnv().currentSpec.waitsFor.apply(jasmine.getEnv().currentSpec, arguments);
 };
-if (isCommonJS) exportsx.waitsFor = waitsFor;
+if (isCommonJS) exports.waitsFor = waitsFor;
 
 /**
  * A function that is called before each spec in a suite.
@@ -572,7 +570,7 @@ if (isCommonJS) exportsx.waitsFor = waitsFor;
 var beforeEach = function(beforeEachFunction) {
   jasmine.getEnv().beforeEach(beforeEachFunction);
 };
-if (isCommonJS) exportsx.beforeEach = beforeEach;
+if (isCommonJS) exports.beforeEach = beforeEach;
 
 /**
  * A function that is called after each spec in a suite.
@@ -584,7 +582,7 @@ if (isCommonJS) exportsx.beforeEach = beforeEach;
 var afterEach = function(afterEachFunction) {
   jasmine.getEnv().afterEach(afterEachFunction);
 };
-if (isCommonJS) exportsx.afterEach = afterEach;
+if (isCommonJS) exports.afterEach = afterEach;
 
 /**
  * Defines a suite of specifications.
@@ -604,7 +602,7 @@ if (isCommonJS) exportsx.afterEach = afterEach;
 var describe = function(description, specDefinitions) {
   return jasmine.getEnv().describe(description, specDefinitions);
 };
-if (isCommonJS) exportsx.describe = describe;
+if (isCommonJS) exports.describe = describe;
 
 /**
  * Disables a suite of specifications.  Used to disable some suites in a file, or files, temporarily during development.
@@ -615,7 +613,7 @@ if (isCommonJS) exportsx.describe = describe;
 var xdescribe = function(description, specDefinitions) {
   return jasmine.getEnv().xdescribe(description, specDefinitions);
 };
-if (isCommonJS) exportsx.xdescribe = xdescribe;
+if (isCommonJS) exports.xdescribe = xdescribe;
 
 
 // Provide the XMLHttpRequest class for IE 5.x-6.x:
@@ -797,8 +795,6 @@ jasmine.Env.prototype.nextSuiteId = function () {
  * @param {jasmine.Reporter} reporter An object which will receive status updates.
  */
 jasmine.Env.prototype.addReporter = function(reporter) {
-	log.info('adding report ............ ');
-	log.info(reporter);
   this.reporter.addReporter(reporter);
 };
 
@@ -1027,7 +1023,6 @@ jasmine.Reporter.prototype.reportRunnerStarting = function(runner) {
 
 //noinspection JSUnusedLocalSymbols
 jasmine.Reporter.prototype.reportRunnerResults = function(runner) {
-	log.info('testing..');
 };
 
 //noinspection JSUnusedLocalSymbols
@@ -1201,10 +1196,8 @@ jasmine.Matchers.prototype.report = function(result, failing_message, details) {
 
 jasmine.Matchers.wrapInto_ = function(prototype, matchersClass) {
   for (var methodName in prototype) {
-	  log.info(methodName);
     if (methodName == 'report') continue;
     var orig = prototype[methodName];
-    //log.info(orig);
     matchersClass.prototype[methodName] = jasmine.Matchers.matcherFn_(methodName, orig);
   }
 };
@@ -1212,9 +1205,8 @@ jasmine.Matchers.wrapInto_ = function(prototype, matchersClass) {
 jasmine.Matchers.matcherFn_ = function(matcherName, matcherFunction) {
   return function() {
     var matcherArgs = jasmine.util.argsToArray(arguments);
-    log.info(arguments);
     var result = matcherFunction.apply(this, arguments);
-log.info(result);
+
     if (this.isNot) {
       result = !result;
     }
@@ -1247,7 +1239,6 @@ log.info(result);
       actual: this.actual,
       message: message
     });
-    log.info(expectationResult);
     this.spec.addMatcherResult(expectationResult);
     return jasmine.undefined;
   };
@@ -1597,7 +1588,6 @@ jasmine.FakeTimer = function() {
   };
 
   self.setInterval = function(funcToCall, millis) {
-	  log.info('############## self.setInterval calling....');
     self.timeoutsMade++;
     self.scheduleFunction(self.timeoutsMade, funcToCall, millis, true);
     return self.timeoutsMade;
@@ -1736,7 +1726,6 @@ jasmine.Clock.installed = jasmine.Clock.real;
 
 //else for IE support
 jasmine.getGlobal().setTimeout = function(funcToCall, millis) {
-	log.info("#######################settimeout");
   if (jasmine.Clock.installed.setTimeout.apply) {
     return jasmine.Clock.installed.setTimeout.apply(this, arguments);
   } else {
@@ -1745,7 +1734,6 @@ jasmine.getGlobal().setTimeout = function(funcToCall, millis) {
 };
 
 jasmine.getGlobal().setInterval = function(funcToCall, millis) {
-	log.info('#####################setInterval')
   if (jasmine.Clock.installed.setInterval.apply) {
     return jasmine.Clock.installed.setInterval.apply(this, arguments);
   } else {
@@ -1875,7 +1863,6 @@ jasmine.NestedResults.prototype.addResult = function(result) {
       }
     }
   }
-  log.info(this.items_);
   this.items_.push(result);
 };
 
@@ -2093,26 +2080,13 @@ jasmine.Queue.prototype.next_ = function() {
         self.index++;
 
         var now = new Date().getTime();
-        log.info(self.env.updateInterval);
-				        if (self.env.lastUpdate == 0) {
-					log
-							.info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxOOOOOOOO');
-					self.env.lastUpdate =now;
-				} 
-        log.info(now);
-        log.info((self.env.lastUpdate));
-        log.info((now - self.env.lastUpdate > self.env.updateInterval))
-        log.info((self.env.updateInterval && now - self.env.lastUpdate > self.env.updateInterval));
         if (self.env.updateInterval && now - self.env.lastUpdate > self.env.updateInterval) {
           self.env.lastUpdate = now;
-/*          self.env.setTimeout(function() {
-        	  log.info('############settime out');
+          self.env.setTimeout(function() {
             self.next_();
-          }, 0);*/
-          self.next_();
+          }, 0);
         } else {
           if (jasmine.Queue.LOOP_DONT_RECURSE && completedSynchronously) {
-        	  
             goAgain = true;
           } else {
             self.next_();
@@ -2164,12 +2138,9 @@ jasmine.Runner = function(env) {
 jasmine.Runner.prototype.execute = function() {
   var self = this;
   if (self.env.reporter.reportRunnerStarting) {
-	  log.info('self.env.reporter.reportRunnerStarting');
     self.env.reporter.reportRunnerStarting(this);
   }
   self.queue.start(function () {
-	  
-	  log.info('finishCallback in self.queue.start');
     self.finishCallback();
   });
 };
@@ -2186,23 +2157,18 @@ jasmine.Runner.prototype.afterEach = function(afterEachFunction) {
 
 
 jasmine.Runner.prototype.finishCallback = function() {
-	log.info('in jasmine.Runner.prototype.finishCallback calling - - this.env.reporter.reportRunnerResults');
-	//print('calling... report to result to represent');
   this.env.reporter.reportRunnerResults(this);
 };
 
 jasmine.Runner.prototype.addSuite = function(suite) {
-  log.info('Pushing suite.........');
   this.suites_.push(suite);
 };
 
 jasmine.Runner.prototype.add = function(block) {
-	if (block instanceof jasmine.Suite) {
-		log.info('adding this.addSuite(block).........');
-		this.addSuite(block);
-	}
-	log.info('adding this.queue.add(block) .........');
-	this.queue.add(block);
+  if (block instanceof jasmine.Suite) {
+    this.addSuite(block);
+  }
+  this.queue.add(block);
 };
 
 jasmine.Runner.prototype.specs = function () {
@@ -2280,9 +2246,7 @@ jasmine.Spec.prototype.log = function() {
 };
 
 jasmine.Spec.prototype.runs = function (func) {
-	log.info('jasmine.Spec.prototype.runs with addedin block to queue');
   var block = new jasmine.Block(this.env, func, this);
-  log.info(func);
   this.addToQueue(block);
   return this;
 };
@@ -2299,11 +2263,7 @@ jasmine.Spec.prototype.addToQueue = function (block) {
  * @param {jasmine.ExpectationResult} result
  */
 jasmine.Spec.prototype.addMatcherResult = function(result) {
-	//log.info(result);
-	 //print(result);
   this.results_.addResult(result);
-  log.info(this.results_);
- 
 };
 
 jasmine.Spec.prototype.expect = function(actual) {
@@ -2357,7 +2317,6 @@ jasmine.Spec.prototype.waitsFor = function(latchFunction, optional_timeoutMessag
 };
 
 jasmine.Spec.prototype.fail = function (e) {
-	log.info(e.stack);//did nt hit in here
   var expectationResult = new jasmine.ExpectationResult({
     passed: false,
     message: e ? jasmine.util.formatException(e) : 'Exception',
@@ -2575,7 +2534,6 @@ jasmine.WaitsBlock.prototype.execute = function (onComplete) {
     this.env.reporter.log('>> Jasmine waiting for ' + this.timeout + ' ms...');
   }
   this.env.setTimeout(function () {
-	  log.info('##############settimeout');
     onComplete();
   }, this.timeout);
 };
@@ -2629,7 +2587,6 @@ jasmine.WaitsForBlock.prototype.execute = function(onComplete) {
     this.totalTimeSpentWaitingForLatch += jasmine.WaitsForBlock.TIMEOUT_INCREMENT;
     var self = this;
     this.env.setTimeout(function() {
-    log.info("############setTimeout");
       self.execute(onComplete);
     }, jasmine.WaitsForBlock.TIMEOUT_INCREMENT);
   }
@@ -2640,83 +2597,4 @@ jasmine.version_= {
   "minor": 3,
   "build": 1,
   "revision": 1354556913
-};   
-
-
-
-
-//===== reporter
-
-jasmine.JSONReporter = function() {
-	
-	  //  var self = this;
-	  //  var doc = _doc || window.document;
-	    var startingTime = (new Date()).getTime();
-	
-	    this.exportsx = {
-	        elapsedTime: null,
-	        specsCount: 0,
-	        specsPassed: 0,
-	        suites: []
-	    },
-	
-	    this.reportRunnerResults = function() {
-	    	this.exportsx.elapsedTime = parseInt((new Date()).getTime() - startingTime, 10) + "ms" ;	 
-	    	log.info(this);
-	    	log.info( JSON.stringify(this.exportsx) );
-	    	print(JSON.stringify(this.exportsx));
-	    	//print('WOWOWOW');
-	    	log.info('testing OUt put');
-	    	/* if ( this.exportsx.specsCount - this.exportsx.specsPassed !== 0 ) {
-	    		self.log('Exiting with errors');
-	    	} else {
-	    		self.log('Exiting with ' + this.exportsx.specsCount + ' passed specs ');
-	    	} */
-
-	    },
-	
-	    this.reportSpecResults = function( spec ) {
-	    	//print('ccccccc');
-	    	log.info('reportSpecResults..........');
-	    	this.exportsx.specsCount += 1;
-
-	    	if (spec.results().passed()) {
-	    		this.exportsx.specsPassed++;
-	    	}
-	    	log.info('xxxxxxxxxxxx JSON Reporter xxxxxxxxxxxxxxxxxxxxxxx');
-	    	var l=spec.results().items_.length;
-	    	var items = new Array(); 
-	    	for(var i=0; i<l;i++ ){
-	    		log.info(spec.results().items_[i]);
-	    		items[i] = {
-	    				type : spec.results().items_[i].type,
-	    				message : spec.results().items_[i].message
-	    		};
-	    	}
-	log.info(spec.results());
-	//log.info(spec.suite);
-	
-	        this.exportsx.suites.push({
-	            suite: spec.suite.parentSuite ? spec.suite.parentSuite.description : spec.suite.description,
-	            spec: spec.description,
-	            passed: spec.results().passed(),
-	            items : items
-	           
-	            
-	        });
-	    };
-	
-	    this.log = function() {
-	     //   var console = test.jasmine.getGlobal().console;
-	        log.info('testing json....');
-	        log.info(arguments);
-	       /*  if (console && console.log) {
-	            if (console.log.apply) {
-	                console.log.apply(console, arguments);
-	            } else {
-	                console.log(arguments); // ie fix: console.log.apply doesn't exist on ie
-	            }
-	        } */
-	    };
-	};
-
+};
