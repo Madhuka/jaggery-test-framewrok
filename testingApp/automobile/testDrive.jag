@@ -1,0 +1,5 @@
+<%
+
+var myCar = new Car({name:"Vitz", engineSize: 1000});
+
+%>
