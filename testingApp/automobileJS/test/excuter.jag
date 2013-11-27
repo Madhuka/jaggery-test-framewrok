@@ -1,0 +1,15 @@
+<%
+var test = require("test");
+
+	var jasmineEnv = test.jasmine.getEnv();
+	test.jasmineEnv.updateInterval = 10;	
+	var jsonReporter = new test.jasmine.JSONReporter();
+	test.jasmineEnv.addReporter(jsonReporter);
+	require('car/carSpec.js');
+	require('car/toyota/carSpec.js');
+	execJasmine();
+	function execJasmine() {
+		test.jasmineEnv.execute();
+	}
+	
+%>
