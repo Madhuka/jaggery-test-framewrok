@@ -2,56 +2,16 @@
      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head><title>Automobile</title></head>
+<head></head>
 
 <body>
-<h2>Automobile App</h2>
-<p>It is simple app that allow to have test drive on car</p>
-<a href='./test/car/carSpec.jag'>Test Car</a>
+This simple jaggery application for testing new jaggery test framework. <br>
+You can find test in application location with folder named as test<br>
+There you can find one jag file and all other test specification have writing in JS.
 
+<br><br>
+Please Go to Test new JS file structure.  <br>http://localhost:9763/automobileJS/test/excuter.jag
 </body>
-
-<%
-var url = request.getRequestURI();
-var DEFAULT_FILE_NAME='excutor.jag';
-var uriMatcher = new URIMatcher(url),
-log = new Log();
-log.info(uriMatcher);
-log.info(url);
- if(uriMatcher.match("/{dir0}/{page}")) {
-       print("dir0 element is : " + uriMatcher.elements().dir0);
- }
- 
- /*
- 		Checks the pattern array with the request uri
- 		@pattern:     An array of patterns e.g./{context}/[ASSET_PATH]/{type}
- 		@uriMatcher : A URIMatcher object 
- 		@return: true if the pattern matches,else false
- 		*/
- 		/* function isMatchingPattern(patterns,uriMatcher){
- 			
- 			for each(var pattern in patterns){
- 				
- 				if(uriMatcher.match(pattern)){
- 					
- 					return true;
- 				}
- 			}
- 			
- 			return false;
- 		} */
- 		
- 		//var matcher=new URIMatcher(request.getRequestURI());
- 				
- 				
- 				var patterns=[ '/{context}'+URL+'/{type}/{+suffix}',
- 						'/{context}'+URL+'/{type}'];
- 				
- 		
- 		
-%>
-
 </html>
-
 
 
