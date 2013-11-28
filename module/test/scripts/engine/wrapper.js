@@ -91,6 +91,7 @@ jasmine.Env.prototype.execute = function() {
 
 //for test specification name identifyer
 var specifcation = null;
+var TEST_FILE_EXTENSIOIN = '.js';
 
 /**
  * function have URl mappering for pattern unlimate folder strure with one file inside with specfication
@@ -168,10 +169,10 @@ function reqiureFiles(path) {
 		isCompleted = true;
 		log.debug("is Dir " + path);
 		crawl(path);
-	} else if (isExists(path + '.js')) {
+	} else if (isExists(path + TEST_FILE_EXTENSIOIN)) {
 		isCompleted = true;
-		log.debug("is File " + path + '.js');
-		require(path + '.js');
+		log.debug("is File " + path + TEST_FILE_EXTENSIOIN);
+		require(path + TEST_FILE_EXTENSIOIN);
 	}
 	return isCompleted;
 };
@@ -244,7 +245,7 @@ function isExists(path) {
  */
 function isValidPath(path1,path2) {
 	var isValid = false;
-	if ((isDirectory(path2) || isExists(path2+'.js')) && !(isDirectory(path1) || isExists(path1+'.js') )) {
+	if ((isDirectory(path2) || isExists(path2+TEST_FILE_EXTENSIOIN)) && !(isDirectory(path1) || isExists(path1+TEST_FILE_EXTENSIOIN) )) {
 		log.debug('Current URL - path is validated for testspec name.');
 		isValid = true;
 	}
