@@ -1,0 +1,13 @@
+<%
+var test = require("test");
+
+	var jasmineEnv = test.jasmine.getEnv();	
+	var jsonReporter = new test.jasmine.JSONReporter();
+	test.jasmineEnv.addReporter(jsonReporter);
+	execJasmine();
+	
+	function execJasmine() {
+		test.jasmineEnv.execute();
+	}
+	
+%>

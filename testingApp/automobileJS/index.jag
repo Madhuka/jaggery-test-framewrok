@@ -4,14 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head></head>
 
-<body>
-This simple jaggery application for testing new jaggery test framework. <br>
-You can find test in application location with folder named as test<br>
-There you can find one jag file and all other test specification have writing in JS.
+<body><h2>Automobile App </h2>
+<a href="http://localhost:9763/automobileJS/test/">Visit To Test Cars</a>
 
-<br><br>
-Please Go to Test new JS file structure.  <br>http://localhost:9763/automobileJS/test/excuter.jag
 </body>
+
+
 </html>
 
 
