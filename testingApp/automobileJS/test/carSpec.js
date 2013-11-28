@@ -1,6 +1,6 @@
 //define test suites
 
-var Car = require('../../modules/car.js').Car;
+var Car = require('../modules/car.js').Car;
 
 test.describe('TestSuiteOne-BasicCar', function() {
 
