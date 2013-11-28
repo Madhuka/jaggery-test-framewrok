@@ -797,8 +797,9 @@ jasmine.Env.prototype.nextSuiteId = function () {
 jasmine.Env.prototype.addReporter = function(reporter) {
   this.reporter.addReporter(reporter);
 };
-
+var log = new Log();
 jasmine.Env.prototype.execute = function() {
+	log.info('execute..........sssssssssss')
   this.currentRunner_.execute();
 };
 

@@ -9,6 +9,6 @@
     </script>
     <script>
         <name>jsonReport</name>
-        <path>scripts/reporters/jsonReporter.js</path>
-    </script>	
+        <path>scripts/report/jsonReporter.js</path>
+    </script>		
 </module>
