@@ -1,13 +1,6 @@
 <%
-var test = require("test");
-
-	var jasmineEnv = test.jasmine.getEnv();	
-	var jsonReporter = new test.jasmine.JSONReporter();
-	test.jasmineEnv.addReporter(jsonReporter);
-	execJasmine();
+//requiring test module from jaggery calling cola 'jaggery - test framework' to run 
+require("test").cola.run();
 	
-	function execJasmine() {
-		test.jasmineEnv.execute();
-	}
 	
 %>

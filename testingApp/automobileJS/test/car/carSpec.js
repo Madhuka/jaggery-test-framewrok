@@ -2,48 +2,48 @@
 
 var Car = require('../../modules/car.js').Car;
 
-test.describe('TestSuiteOne', function() {
+describe('TestSuiteOne', function() {
 
     //config data for helping to test
     var myCar, myCarConfig = {
-        name : "Vitz",
-        engineSize : 1000
+        name : "Ford",
+        engineSize : 1500
     };
 
     //setting and define object to testing
-    test.beforeEach(function() {
+    beforeEach(function() {
         myCar = new Car(myCarConfig);
     });
 
     //First test for to check was car built fine.
-    test.it('Testing Car name and Engineer size is validate to Drive', function() {
-        test.expect(myCar.name).toEqual("Vitz");
-        test.expect(myCar.engineSize).toEqual(1000);
+    it('Testing Car name and Engineer size is validate to Drive', function() {
+        expect(myCar.name).toEqual("Ford");
+        expect(myCar.engineSize).toEqual(1500);
     });
 
     //grouping test for Engine Turning Test
-    test.describe("TurningEngine", function() {
+    describe("TurningEngine", function() {
 
         //checking test platform work fine
-        test.it("Checking testing platform is turned to test", function() {
-            test.expect(1).toEqual(1);
+        it("Checking testing platform is turned to test", function() {
+            expect(1).toEqual(1);
         });
 
         //testing car (function) racing by enginee
-        test.it("Checking Engineer capacity for Express way to ride", function() {
-            test.expect(myCar.getEngineSize()).toEqual(1000);
+        it("Checking Engineer capacity for Express way to ride", function() {
+            expect(myCar.getEngineSize()).toEqual(1500);
         });
 
     });
 
-    test.describe("upgradeEngineSize", function() {
+    describe("upgradeEngineSize", function() {
 
-        test.it("Checking testing platform is turned to test", function() {
-            test.expect(1).toBe(1);
+        it("Checking testing platform is turned to test", function() {
+            expect(1).toBe(1);
         });
 
-        test.it("upgradeEngineSize to testing", function() {
-            test.expect(myCar.upgradeEngineSize()).toBe(1500);
+        it("upgradeEngineSize to testing", function() {
+            expect(myCar.upgradeEngineSize()).toBe(2000);
 
         });
 

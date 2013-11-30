@@ -1,7 +1,7 @@
 jasmine.JSONReporter = function() {
 
 	var startingTime = (new Date()).getTime(), 
-	log = new Log();
+	log = new Log('jsonReporter');
 	this.exports = {
 		elapsedTime : null,
 		specsCount : 0,
@@ -18,12 +18,12 @@ jasmine.JSONReporter = function() {
 				- startingTime, 10)
 				+ "ms";
 		var outJson = JSON.stringify(this.exports);
-		log.info(outJson);
-		print(outJson);
+		log.debug(outJson);
+		print(outJson);		
 		if (this.exports.specsCount - this.exports.specsPassed !== 0) {
-			this.log('Exiting with errors');
+			this.loged('Exiting with errors');
 		} else {
-			this.log('Exiting with ' + this.exports.specsCount
+			this.loged('Exiting with ' + this.exports.specsCount
 					+ ' passed specs ');
 		}
 
@@ -46,7 +46,7 @@ jasmine.JSONReporter = function() {
 		var l = spec.results().items_.length;
 		var items = new Array();
 		for ( var i = 0; i < l; i++) {
-			log.info(spec.results().items_[i]);
+			log.debug(spec.results().items_[i]);
 			items[i] = {
 				type : spec.results().items_[i].type,
 				message : spec.results().items_[i].message
@@ -67,8 +67,11 @@ jasmine.JSONReporter = function() {
 		});
 	};
 
-	this.log = function() {
-		// log.info('testing json....');
-		// log.info(arguments);
+	/**
+	 * Will be used to logged in finally 
+	 * @param arguments String message to passing for log
+	 */
+	this.loged = function(arguments) {
+		 log.info(arguments);
 	};
 };
