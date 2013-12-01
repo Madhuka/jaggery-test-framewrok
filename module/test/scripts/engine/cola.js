@@ -100,7 +100,7 @@ var cola = (function () {
      * testSpecName }0-1] * above URL pattern can be handle
      *
      */
-    urlMapper = function () {
+    var urlMapper = function () {
         var uri = request.getRequestURI(),
             pathMatcher1 = null,
             pathMatcher2 = null,
