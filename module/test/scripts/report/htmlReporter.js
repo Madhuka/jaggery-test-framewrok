@@ -51,13 +51,10 @@ jasmine.HTMLReporter = function () {
         var items = new Array();
         for (var i = 0; i < l; i++) {
             //log.debug(spec.results().items_[i]);
-            items[i] = {
-                type: spec.results().items_[i].type,
-                message: spec.results().items_[i].message
-            };
+            
             data = {
                 'id': this.exports.specsCount - 1,
-                'value': this.exports.specsCount - 1 + '. ' + spec.suite.description + ' ---> ' + spec.results().items_[i].message
+                'value': this.exports.specsCount  + '. ' + spec.suite.description + ' ---> ' + spec.results().items_[i].message
             };
             updateElement(data);
 
@@ -111,7 +108,7 @@ jasmine.HTMLReporter = function () {
 
             addElement({
                 'id': i,
-                'value': i + '. '
+                'value': (i+1) + '. '
             });
             log.debug(i + '-----------specs.length   :: ' + specs[i]);
         }
