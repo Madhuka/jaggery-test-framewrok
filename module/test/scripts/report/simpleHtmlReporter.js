@@ -82,13 +82,13 @@ jasmine.simpleHTMLReporter = function () {
         log.debug('reportRunnerStarting..............xxxx............' + runner.env.versionString());
 
         var suites = runner.suites();
-        log.info('suites.length-------' + suites.length);
+        log.debug('suites.length-------' + suites.length);
         for (var i = 0; i < suites.length; i++) {
             var suite = suites[i];
-            log.info(i + '. suite id - ' + suite.id + ':: description - ' + suite.description);
+            log.debug(i + '. suite id - ' + suite.id + ':: description - ' + suite.description);
 
             if (suite.parentSuite) {
-                log.info('parentSuite ID ::' + suite.parentSuite.id);
+                log.debug('parentSuite ID ::' + suite.parentSuite.id);
             }
         }
 
@@ -128,9 +128,9 @@ jasmine.simpleHTMLReporter = function () {
                 'id': specs[i].id,
                 'value': (specs[i].id + 1) + '. ' + specs[i].getFullName()
             });
-            log.info(i + '-----------specs.length   :: ' + specs[i].env.currentRunner_.queue.blocks.length);
-            log.info(specs[i].getFullName());
-            log.info(specs[i].parentSuite);
+            log.debug(i + '-----------specs.length   :: ' + specs[i].env.currentRunner_.queue.blocks.length);
+            log.debug(specs[i].getFullName());
+            log.debug(specs[i].parentSuite);
         }
     };
 
@@ -184,7 +184,7 @@ jasmine.simpleHTMLReporter = function () {
      * @param arguments to console
      */
     var loged = function (arguments) {
-        log.info(arguments);
+        log.debug(arguments);
     };
     return {
         reportSpecResults: reportSpecResults,

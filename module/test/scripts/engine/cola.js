@@ -106,17 +106,23 @@ var cola = (function () {
      *
      */
     var run = function () {
-        log.debug('Called the run for cola');
+        log.debug(request.getContentType() + 'Called the run for colaaaaaaaaaaa-------' + request.getHeader("User-Agent"));
         var jasmineEnv = jasmine.getEnv(),
             renderingFormat = request.getParameter('format');
         // line can be uncommented for User-Agent/Accept to get type
         // renderingFormat request.getHeader("Accept"); // for to check text/html
-        if (renderingFormat == 'html') {
+        //request.getContentType() for application/json --> JSON
+        //application/http -->
+        //text/html --> simpleHTMLReporter
+        if (renderingFormat == 'simplehtml') {
             var simpleHtmlReporterx = new jasmine.simpleHTMLReporter();
             jasmineEnv.addReporter(simpleHtmlReporterx);
-        } else {
+        } else if (request.getContentType() == 'application/json') {
+            // }else if (renderingFormat == 'json'){
             var jsonReporter = new jasmine.JSONReporter();
             jasmineEnv.addReporter(jsonReporter);
+        } else if (renderingFormat == 'html') {
+            loadJSToFront('scripts/report/lib/dasboard.html');
         }
         jasmineEnv.execute();
     };
@@ -140,21 +146,27 @@ var cola = (function () {
         // Provide a pattern to be matched against the URL
         if (uriMatcher.match('/{appname}/{test}/{+path}')) {
             // If pattern matches, elements can be accessed from their keys
-
-            pathMatcher1 = '/' + uriMatcher.elements().test + '/' + uriMatcher.elements().path;
-            if (pathMatcher1 != null) {
-                pathMatcher2 = pathMatcher1.substr(0, pathMatcher1
-                    .lastIndexOf("/"));
-                if (isValidPath(pathMatcher1, pathMatcher2)) {
-                    specifcation = pathMatcher1.substr(pathMatcher1
-                        .lastIndexOf("/") + 1);
+            log.debug('uriMatcher.elements().path :: ' + uriMatcher.elements().path);
+            var indexU = uriMatcher.elements().path.indexOf('utilities');
+            if (indexU != -1) {
+                log.debug('css or js file request for page.' + uriMatcher.elements().path.substr(indexU + 9));
+                loadJSToFront('scripts/report/lib/' + uriMatcher.elements().path.substr(indexU + 9));
+                return false;
+            } else {
+                pathMatcher1 = '/' + uriMatcher.elements().test + '/' + uriMatcher.elements().path;
+                if (pathMatcher1 != null) {
+                    pathMatcher2 = pathMatcher1.substr(0, pathMatcher1
+                        .lastIndexOf("/"));
+                    if (isValidPath(pathMatcher1, pathMatcher2)) {
+                        specifcation = pathMatcher1.substr(pathMatcher1
+                            .lastIndexOf("/") + 1);
+                    }
                 }
+                log.debug('path : ' + pathMatcher1 + ',' + pathMatcher2);
+                return validatedPatten(pathMatcher1, pathMatcher2);
+                log.debug(isExists(pathMatcher1));
+                log.debug(isExists(pathMatcher2));
             }
-            log.debug('path : ' + pathMatcher1 + ',' + pathMatcher2);
-            return validatedPatten(pathMatcher1, pathMatcher2);
-            log.debug(isExists(pathMatcher1));
-            log.debug(isExists(pathMatcher2));
-
         }
 
         if (uriMatcher.match('/{appname}/{test}/')) {
@@ -247,9 +259,14 @@ var cola = (function () {
      * @returns file will be return for front end
      */
     var loadJSToFront = function (filePath) {
-        var file = new File(filePath);
-        file.open("r");
-        print(file.readAll());
+        var file = new File(absolute(filePath));
+        print(file.getStream());
+    };
+
+    var absolute = function (path) {
+        var process = require('process');
+        var parent = 'file:///' + (process.getProperty('jaggery.home') || process.getProperty('carbon.home')).replace(/[\\]/g, '/').replace(/^[\/]/g, '');
+        return parent + '/modules/test/' + path;
     };
 
     /**
