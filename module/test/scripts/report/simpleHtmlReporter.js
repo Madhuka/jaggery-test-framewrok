@@ -11,15 +11,14 @@ jasmine.simpleHTMLReporter = function () {
         suites: []
     };
 
-    /*
+    /**
      * reportRunnerResults will called finally for to get results
      */
     var reportRunnerResults = function () {
         exports.elapsedTime = parseInt((new Date()).getTime() - startingTime, 10) + "ms";
-        //	var outJson = JSON.stringify(this.exports);
+
         var json = exports;
-        //log.debug(this.exports);
-        //   print('<p>' + json.elapsedTime + '</p>');
+
         var data = {
             'id': 'time',
             'value': 'Elapsed Time: ' + json.elapsedTime
@@ -48,18 +47,14 @@ jasmine.simpleHTMLReporter = function () {
         }
 
         var l = spec.results().items_.length;
-       // var items = new Array();
+
         for (var i = 0; i < l; i++) {
             //log.debug(spec.results().items_[i]);
-            
-           /* data = {
-                'id': exports.specsCount - 1,
-                'value': exports.specsCount  + '. ' + spec.suite.description + ' ---> ' + spec.results().items_[i].message +spec.getFullName()
-            };*/
+
             data = {
-                    'id': exports.specsCount - 1,
-                    'value': exports.specsCount  + '. ' + spec.suite.description + ' ---> ' + spec.results().items_[i].message +':: in ::'+encodeURIComponent(spec.getFullName())
-                };
+                'id': exports.specsCount - 1,
+                'value': exports.specsCount + '. ' + spec.suite.description + ' (' + spec.getFullName() + ')' + ' ---> ' + spec.results().items_[i].message
+            };
             updateElement(data);
 
             updateElement({
@@ -76,29 +71,28 @@ jasmine.simpleHTMLReporter = function () {
 
 
     };
+    
+    /**
+     *     
+     * jasmine API for reporting
+     * will be called report initialization
+     * @param jasmine runner
+     */
     var reportRunnerStarting = function (runner) {
         log.debug('reportRunnerStarting..............xxxx............' + runner.env.versionString());
-        
+
         var suites = runner.suites();
-        log.info('suites.length-------'+suites.length);
+        log.info('suites.length-------' + suites.length);
         for (var i = 0; i < suites.length; i++) {
-          var suite = suites[i];
-          log.info(i+'xxxxxxxxxxxx '+suite.id+'::'+suite.description);
-         
-        //  //var suiteDiv = this.createDom('div', { className: 'suite' },
-           //   this.createDom('a', { className: 'run_spec', href: '?spec=' + encodeURIComponent(suite.getFullName()) }, "run"),
-           //   this.createDom('a', { className: 'description', href: '?spec=' + encodeURIComponent(encodeURIComponent) }, suite.description));
-        //  this.suiteDivs[suite.id] = suiteDiv;
-       //   var parentDiv = this.outerDiv;
-          if (suite.parentSuite) {
-              log.info('xxxxxxxxxxxx ::'+suite.parentSuite.id);
-          //  parentDiv = this.suiteDivs[suite.parentSuite.id];
-          }
-         // parentDiv.appendChild(suiteDiv);
+            var suite = suites[i];
+            log.info(i + '. suite id - ' + suite.id + ':: description - ' + suite.description);
+
+            if (suite.parentSuite) {
+                log.info('parentSuite ID ::' + suite.parentSuite.id);
+            }
         }
-        
-        
-        //log.debug(runner.toSource());
+
+
         var specs = runner.specs() || [],
             specLength = specs.length;
 
@@ -117,7 +111,7 @@ jasmine.simpleHTMLReporter = function () {
         });
         addElement({
             id: 'time',
-            value: 'There is ' + specs.length + 'Test to be run'
+            value: 'time'
         });
         addElement({
             id: 'pass',
@@ -132,7 +126,7 @@ jasmine.simpleHTMLReporter = function () {
 
             addElement({
                 'id': specs[i].id,
-                'value': (specs[i].id+1) + '. '+specs[i].getFullName()
+                'value': (specs[i].id + 1) + '. ' + specs[i].getFullName()
             });
             log.info(i + '-----------specs.length   :: ' + specs[i].env.currentRunner_.queue.blocks.length);
             log.info(specs[i].getFullName());
@@ -141,6 +135,11 @@ jasmine.simpleHTMLReporter = function () {
     };
 
 
+    /**
+     * Will give update Elements
+     * (Since this was create there for issue passing lib files from module)
+     * @param data for element 
+     */
     var updateElement = function (data) {
         addObject({
             name: 'script',
@@ -148,6 +147,10 @@ jasmine.simpleHTMLReporter = function () {
         });
     };
 
+    /**
+     * adding Element DOM with data
+     * @param data for element
+     */
     var addElement = function (data) {
         addObject({
             name: 'div',
@@ -156,6 +159,10 @@ jasmine.simpleHTMLReporter = function () {
         });
     };
 
+    /**
+     * adding Object to DOM
+     * @param data for Object 
+     */
     var addObject = function (data) {
         if (data.id == null) {
             send('<' + data.name + '>' + data.value + '</' + data.name + '>');
@@ -164,16 +171,25 @@ jasmine.simpleHTMLReporter = function () {
         }
     };
 
+    /**
+     * passing to front end 
+     * @param arguments will be element
+     */
     var send = function (arguments) {
         print(arguments);
     };
+    
+    /**
+     * Logging data to console
+     * @param arguments to console
+     */
     var loged = function (arguments) {
         log.info(arguments);
     };
     return {
-	reportSpecResults : reportSpecResults,
-	reportRunnerResults : reportRunnerResults,
-	reportRunnerStarting : reportRunnerStarting
+        reportSpecResults: reportSpecResults,
+        reportRunnerResults: reportRunnerResults,
+        reportRunnerStarting: reportRunnerStarting
     };
 
 };

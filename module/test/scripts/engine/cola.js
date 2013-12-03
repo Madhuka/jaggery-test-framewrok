@@ -1,20 +1,28 @@
 var cola = (function () {
 
     // for test specification name identification
-    var specifcation = null;
+    var specifcation = null,
+        action = null;
 
     //test spec extension
-    var TEST_FILE_EXTENSIOIN = '.js';
+    var TEST_FILE_EXTENSIOIN = '.js',
+        LIST_ACTION = {
+            listSuits: 'listsuits',
+            listSpecs: 'listspecs'
+        };
 
     jasmine.Spec.prototype.runs = function (func) {
         var block = new jasmine.Block(this.env, func, this),
             spec = specifcation;
+        action = request.getParameter("action");
         log.debug('specifcation is found ' + spec);
         // replace to id for this.env.currentSpec.suite.description
 
-        if (spec == null) {
+        //checking 'listSpecs' is called then do not added all in to execution list for to skip it.
+        if (spec == null && action != LIST_ACTION.listSuits && action != LIST_ACTION.listSpecs) {
             this.addToQueue(block);
-        } else if (this.env.currentSpec.suite.queue.env.currentSpec.id == spec) {
+            //  } else if (this.env.currentSpec.suite.queue.env.currentSpec.id == spec) { 1.1V //checking for ID 
+        } else if (this.env.currentSpec.suite.queue.env.currentSpec.getFullName() == spec) {
             this.addToQueue(block);
 
         }
@@ -97,33 +105,29 @@ var cola = (function () {
      * this funtion will register the reporter for ENV in jasmine
      *
      */
-    var run = function() {
-	log.debug('Called the run for cola');
-	var jasmineEnv = jasmine.getEnv(),
-	renderingFormat = request.getParameter('format');
-	// for 1.1 V for test framework or if it fixed for AJAx called
-	// after fixing this jaggery blocker
-	// https://wso2.org/jira/browse/JAGGERY-339 will support AJAX then blow
-	// line can be uncommented for User-Agent/Accept to get type
-	//https://wso2.org/jira/browse/JAGGERY-339
-	// renderingFormat request.getHeader("Accept"); // for to check text/html
-	if (renderingFormat == 'html') {
-	    var htmlReporter = new jasmine.HTMLReporter();
-	    jasmineEnv.addReporter(htmlReporter);
-	} else {
-	    var jsonReporter = new jasmine.JSONReporter();
-	    jasmineEnv.addReporter(jsonReporter);
-	}
-	jasmineEnv.execute();
+    var run = function () {
+        log.debug('Called the run for cola');
+        var jasmineEnv = jasmine.getEnv(),
+            renderingFormat = request.getParameter('format');
+        // line can be uncommented for User-Agent/Accept to get type
+        // renderingFormat request.getHeader("Accept"); // for to check text/html
+        if (renderingFormat == 'html') {
+            var simpleHtmlReporterx = new jasmine.simpleHTMLReporter();
+            jasmineEnv.addReporter(simpleHtmlReporterx);
+        } else {
+            var jsonReporter = new jasmine.JSONReporter();
+            jasmineEnv.addReporter(jsonReporter);
+        }
+        jasmineEnv.execute();
     };
-    
+
     /**
      * function have URl mapping for pattern (n *m , 0<n,m<N) folder structure with one
      * file inside with specification
-     * 
+     *
      * http://localhost:9763/automobile/test[/{folderName}0-n][/{fileName}0-1][/{
      * testSpecName }0-1] * above URL pattern can be handle
-     * 
+     *
      */
     var urlMapper = function () {
         var uri = request.getRequestURI(),
@@ -185,6 +189,7 @@ var cola = (function () {
         return true;
     };
 
+
     /**
      * function will require all test specification js files/file in path
      *
@@ -237,10 +242,6 @@ var cola = (function () {
     };
 
     /**
-     * This function is main for passing js fils in front end
-     * from from jaggery module level to app level
-     * TO-DO - TO-CALL - Jaggery have limitation on this, this need to be fixed in jaggery
-     * THIS-LIMITATION in jaggery not allowing AJAX process in front end
      *
      * @param path of the file inside jaggery module
      * @returns file will be return for front end
@@ -251,8 +252,36 @@ var cola = (function () {
         print(file.readAll());
     };
 
+    /**
+     * checking client request call 'listsuits'
+     */
+    var toListSuites = function () {
+        log.debug('toListSuites - ' + LIST_ACTION.listSuits);
+        if (action == LIST_ACTION.listSuits) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 
+    /**
+     * checking client request call 'listspecs'
+     */
+    var toListSpecs = function () {
+        log.debug('toListSpecs - ' + LIST_ACTION.listSpecs);
+        if (action == LIST_ACTION.listSpecs) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 
+    /**
+     * checking client request call 'test Specifcation' in url
+     */
+    var getSpecifcation = function () {
+        return specifcation;
+    };
 
 
     /**
@@ -306,7 +335,10 @@ var cola = (function () {
 
     return {
         run: run,
-        loadJSToFront: loadJSToFront
+        loadJSToFront: loadJSToFront,
+        toListSuites: toListSuites,
+        toListSpecs: toListSpecs,
+        getSpecifcation: getSpecifcation
     };
 
 }());
