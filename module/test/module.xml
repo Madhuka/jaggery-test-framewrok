@@ -8,11 +8,15 @@
         <path>scripts/engine/cola.js</path>
     </script>
     <script>
-        <name>jsonReport</name>
+        <name>jsonReporter</name>
         <path>scripts/report/jsonReporter.js</path>
     </script>		
     <script>
-        <name>htmlReport</name>
+        <name>htmlReporter</name>
         <path>scripts/report/htmlReporter.js</path>
+    </script>
+	 <script>
+        <name>simpleHtmlReporter</name>
+        <path>scripts/report/simpleHtmlReporter.js</path>
     </script>
 </module>

@@ -1,4 +1,4 @@
-cola.HTMLReporter = function () {
+jasmine.simpleHTMLReporter = function () {
 
     var startingTime = (new Date()).getTime(),
         log = new Log();
@@ -52,10 +52,14 @@ cola.HTMLReporter = function () {
         for (var i = 0; i < l; i++) {
             //log.debug(spec.results().items_[i]);
             
-            data = {
+           /* data = {
                 'id': exports.specsCount - 1,
-                'value': exports.specsCount  + '. ' + spec.suite.description + ' ---> ' + spec.results().items_[i].message
-            };
+                'value': exports.specsCount  + '. ' + spec.suite.description + ' ---> ' + spec.results().items_[i].message +spec.getFullName()
+            };*/
+            data = {
+                    'id': exports.specsCount - 1,
+                    'value': exports.specsCount  + '. ' + spec.suite.description + ' ---> ' + spec.results().items_[i].message +':: in ::'+encodeURIComponent(spec.getFullName())
+                };
             updateElement(data);
 
             updateElement({
@@ -73,7 +77,27 @@ cola.HTMLReporter = function () {
 
     };
     var reportRunnerStarting = function (runner) {
-        log.debug('reportRunnerStarting..........................' + runner.env.versionString());
+        log.debug('reportRunnerStarting..............xxxx............' + runner.env.versionString());
+        
+        var suites = runner.suites();
+        log.info('suites.length-------'+suites.length);
+        for (var i = 0; i < suites.length; i++) {
+          var suite = suites[i];
+          log.info(i+'xxxxxxxxxxxx '+suite.id+'::'+suite.description);
+         
+        //  //var suiteDiv = this.createDom('div', { className: 'suite' },
+           //   this.createDom('a', { className: 'run_spec', href: '?spec=' + encodeURIComponent(suite.getFullName()) }, "run"),
+           //   this.createDom('a', { className: 'description', href: '?spec=' + encodeURIComponent(encodeURIComponent) }, suite.description));
+        //  this.suiteDivs[suite.id] = suiteDiv;
+       //   var parentDiv = this.outerDiv;
+          if (suite.parentSuite) {
+              log.info('xxxxxxxxxxxx ::'+suite.parentSuite.id);
+          //  parentDiv = this.suiteDivs[suite.parentSuite.id];
+          }
+         // parentDiv.appendChild(suiteDiv);
+        }
+        
+        
         //log.debug(runner.toSource());
         var specs = runner.specs() || [],
             specLength = specs.length;
@@ -107,10 +131,12 @@ cola.HTMLReporter = function () {
         for (var i = 0; i < specLength; i++) {
 
             addElement({
-                'id': i,
-                'value': (i+1) + '. '
+                'id': specs[i].id,
+                'value': (specs[i].id+1) + '. '+specs[i].getFullName()
             });
-            log.debug(i + '-----------specs.length   :: ' + specs[i]);
+            log.info(i + '-----------specs.length   :: ' + specs[i].env.currentRunner_.queue.blocks.length);
+            log.info(specs[i].getFullName());
+            log.info(specs[i].parentSuite);
         }
     };
 
