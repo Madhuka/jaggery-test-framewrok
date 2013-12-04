@@ -14,11 +14,13 @@ TestApp = new function () {
                 ++selectedCount;
                 $('#basicInfor').html('Test count is ' + testCount + ' running ' + selectedCount + '/' + testCount);
                 TestAppUtil.makeJsonRequest(document.location.pathname + $("#chk" + i + "").val(), null, function (htmlx) {
-                    //  if(htmlx.suites[0].items[0].message == "Passed."){
-                    $("#res" + i + "").html('<div class="alert alert-success">' + htmlx.suites[0].items[0].message + '</div>');
-                    //  }else{
-                    //   $("#res" + i + "").html('<div class="alert alert-danger">' + htmlx.suites[0].items[0].message + '</div>');                          
-                    //  }
+                    if (htmlx.suites[0].items[0].message == "Passed.") {
+                        $("#res" + i + "").html('<div class="alert alert-success">' + htmlx.suites[0].items[0].message + '</div>');
+                    } else {
+                        $("#res" + i + "").html('<div class="alert alert-danger"> Failed.</div>');
+                        $("#err" + i + "").html('<div class="alert alert-danger">' + htmlx.suites[0].items[0].message + '</div>');
+
+                    }
                     console.log(htmlx.suites[0].itemCount);
                 });
             } else {
@@ -43,7 +45,7 @@ TestApp = new function () {
             function (html) {
 
                 $('#basicInfor').html('Test count is' + html.specsCount);
-                var template = '<table class="table table-hover">{{#.}}<tr><td> <input type="checkbox" id="chk{{id}}" value="{{url}}"> </td><td>{{name}}</td><td><div id="res{{id}}"></div></td> </tr>{{/.}}<table>';
+                var template = '<table class="table table-hover">{{#.}}<tr><td> <input type="checkbox" id="chk{{id}}" value="{{url}}"> </td><td>{{name}}<div id="err{{id}}"></div></td><td><div id="res{{id}}"></div></td> </tr>{{/.}}<table>';
                 var htmlx = Mustache.to_html(template, html.specs);
                 $('#sampleLoc').html(htmlx);
                 testCount = html.specsCount;
