@@ -122,7 +122,8 @@ var cola = (function () {
             var jsonReporter = new jasmine.JSONReporter();
             jasmineEnv.addReporter(jsonReporter);
         } else if (renderingFormat == 'html') {
-            loadJSToFront('scripts/report/lib/dasboard.html');
+		    //file name will variable of String in top - TO-DO
+            loadJSToFront('scripts/reporter/lib/dasboard.html');
         }
         jasmineEnv.execute();
     };
@@ -150,7 +151,7 @@ var cola = (function () {
             var indexU = uriMatcher.elements().path.indexOf('utilities');
             if (indexU != -1) {
                 log.debug('css or js file request for page.' + uriMatcher.elements().path.substr(indexU + 9));
-                loadJSToFront('scripts/report/lib/' + uriMatcher.elements().path.substr(indexU + 9));
+                loadJSToFront('scripts/reporter/lib/' + uriMatcher.elements().path.substr(indexU + 9));
                 return false;
             } else {
                 pathMatcher1 = '/' + uriMatcher.elements().test + '/' + uriMatcher.elements().path;
