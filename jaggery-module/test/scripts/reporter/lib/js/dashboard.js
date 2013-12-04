@@ -14,13 +14,13 @@ TestApp = new function () {
                 ++selectedCount;
                 $('#basicInfor').html('Test count is ' + testCount + ' running ' + selectedCount + '/' + testCount);
                 TestAppUtil.makeJsonRequest(document.location.pathname + $("#chk" + i + "").val(), null, function (htmlx) {
-                    if (htmlx.suites[0].items[0].message == "Passed.") {
-                        $("#res" + i + "").html('<div class="alert alert-success">' + htmlx.suites[0].items[0].message + '</div>');
-                    } else {
-                        $("#res" + i + "").html('<div class="alert alert-danger"> Failed.</div>');
-                        $("#err" + i + "").html('<div class="alert alert-danger">' + htmlx.suites[0].items[0].message + '</div>');
-
-                    }
+                      if(htmlx.suites[0].items[0].message == "Passed."){
+                    $("#res" + i + "").html('<div class="alert alert-success">' + htmlx.suites[0].items[0].message + '</div>');
+                      }else{
+                       $("#res" + i + "").html('<div class="alert alert-danger"> Failed.</div>');  
+                       $("#err" + i + "").html('<div class="alert alert-danger">'+ htmlx.suites[0].items[0].message + '</div>');  
+                       
+                      }
                     console.log(htmlx.suites[0].itemCount);
                 });
             } else {
