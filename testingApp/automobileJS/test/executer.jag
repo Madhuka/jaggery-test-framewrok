@@ -1,6 +1,0 @@
-<%
-//requiring test module from jaggery calling cola 'jaggery - test framework' to run 
-require("test").cola.run();
-	
-	
-%>

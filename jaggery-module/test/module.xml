@@ -9,14 +9,14 @@
     </script>
     <script>
         <name>jsonReporter</name>
-        <path>scripts/report/jsonReporter.js</path>
+        <path>scripts/report/json-reporter.js</path>
     </script>		
     <script>
         <name>htmlReporter</name>
-        <path>scripts/report/htmlReporter.js</path>
+        <path>scripts/report/html-reporter.js</path>
     </script>
 	 <script>
         <name>simpleHtmlReporter</name>
-        <path>scripts/report/simpleHtmlReporter.js</path>
+        <path>scripts/report/simple-html-reporter.js</path>
     </script>
 </module>
