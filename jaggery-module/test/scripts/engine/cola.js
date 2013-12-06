@@ -2,7 +2,9 @@ var cola = (function () {
 
     // for test specification name identification
     var specifcation = null,
+     	errorFound = false,
         action = null;
+    	log = new Log('Cola');
 
     //test spec extension
     var TEST_FILE_EXTENSIOIN = '.js',
@@ -29,7 +31,7 @@ var cola = (function () {
         // replace to id for this.env.currentSpec.suite.description
 
         //checking 'listSpecs' is called then do not added all in to execution list for to skip it.
-        if (spec == null && action != LIST_ACTION.listSuits && action != LIST_ACTION.listSpecs) {
+        if (spec && action != LIST_ACTION.listSuits && action != LIST_ACTION.listSpecs) {
             this.addToQueue(block);
             //  } else if (this.env.currentSpec.suite.queue.env.currentSpec.id == spec) { 1.1V //checking for ID 
         } else if (this.env.currentSpec.suite.queue.env.currentSpec.getFullName() == spec) {
@@ -102,16 +104,7 @@ var cola = (function () {
         }
     };
 
-    /**
-     * function execute calling runner to starting testing after identification (overridering)
-     * url and location pattern to be executed
-     *
-     */
-    jasmine.Env.prototype.execute = function () {
-        if (urlMapper()) {
-            this.currentRunner_.execute();
-        }
-    };
+   
 
     /*
      * END of jasmine over overriding.
@@ -144,7 +137,10 @@ var cola = (function () {
             //file name will variable of String in top - TO-DO
             loadJSToFront('scripts/reporter/lib/dasboard.html');
         }
-        jasmineEnv.execute();
+        if (urlMapper()) {
+            jasmineEnv.execute();
+        }
+        
     };
 
     /**
@@ -159,8 +155,7 @@ var cola = (function () {
         var uri = request.getRequestURI(),
             pathMatcher1 = null,
             pathMatcher2 = null,
-            uriMatcher = new URIMatcher(
-                uri);
+            uriMatcher = new URIMatcher(uri);
         log.debug(uri);
 
         // Provide a pattern to be matched against the URL
@@ -183,9 +178,7 @@ var cola = (function () {
                     }
                 }
                 log.debug('path : ' + pathMatcher1 + ',' + pathMatcher2);
-                return validatedPatten(pathMatcher1, pathMatcher2) && !errorFound;
-                log.debug(isExists(pathMatcher1));
-                log.debug(isExists(pathMatcher2));
+                return validatepattern(pathMatcher1, pathMatcher2) && !errorFound;                
             }
         }
 
@@ -207,9 +200,9 @@ var cola = (function () {
      *            is path of a pattern of path can existing for second level
      * @returns boolean
      */
-    var validatedPatten = function (pathMatcher1, pathMatcher2) {
-        if (!reqiureFiles(pathMatcher1)) {
-            if (!(reqiureFiles(pathMatcher2)) && pathMatcher2 != null && !(isValidPath(pathMatcher1, pathMatcher2))) {
+    var validatepattern = function (pathMatcher1, pathMatcher2) {
+        if (!requireFiles(pathMatcher1)) {
+            if (!(requireFiles(pathMatcher2)) && pathMatcher2 != null && !(isValidPath(pathMatcher1, pathMatcher2))) {
                 log.debug("Path not exsting");
                 print({
                     'error': true,
@@ -230,7 +223,7 @@ var cola = (function () {
      *            define as *.js
      * @returns
      */
-    var reqiureFiles = function (path) {
+    var requireFiles = function (path) {
         log.debug('requiring from ' + path);
         isCompleted = false;
         if (isDirectory(path)) {
@@ -251,7 +244,7 @@ var cola = (function () {
      * @param root
      *            is path of directory to search for test specification files
      */
-    var errorFound = false;
+
     var crawl = function (root) {
         log.debug('crawling on root called ' + root);
         var file = new File(root),
