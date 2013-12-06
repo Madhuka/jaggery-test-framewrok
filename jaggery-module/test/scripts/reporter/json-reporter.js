@@ -63,14 +63,7 @@ jasmine.JSONReporter = function () {
                 name: null,
                 url: null
             };
-            sitex = specs[i];
-            log.info(sitex.description);
-            log.info(sitex.parentSuite);
-            if (sitex.parentSuite) {
-
-                log.info(sitex.parentSuite.description);
-            }
-            log.info(i + '------------------------------------');
+            sitex = specs[i];            
             suit.id = sitex.id;
             suit.name = sitex.description;
             suit.fullname = sitex.getFullName();
