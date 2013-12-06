@@ -123,7 +123,7 @@ jasmine.JSONReporter = function () {
      * @param spec is testSpec
      */
     this.reportSpecResults = function (spec) {
-        if (cola.getSpecifcation() == spec.getFullName() || cola.getSpecifcation() == null) {
+        if (cola.getSpecification() == spec.getFullName() || cola.getSpecification() == null) {
             this.exports.specsCount += 1;
 
             if (spec.results().passed()) {
