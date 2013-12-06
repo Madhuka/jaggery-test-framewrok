@@ -10,10 +10,6 @@
     <script>
         <name>jsonReporter</name>
         <path>scripts/reporter/json-reporter.js</path>
-    </script>		
-    <script>
-        <name>htmlReporter</name>
-        <path>scripts/reporter/html-reporter.js</path>
     </script>
 	 <script>
         <name>simpleHtmlReporter</name>

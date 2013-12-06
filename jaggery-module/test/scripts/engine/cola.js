@@ -11,11 +11,21 @@ var cola = (function () {
             listSpecs: 'listspecs'
         };
 
+    /*
+     *Below function will be used as wrapping jsamine and it will be expose
+     *since they are over riding jasmine.
+     * - TO-DO/THINK canhave seperate file for this call 'jasmine wrapper' or make those in later.
+     */
+    /**
+     *
+     * @param func
+     * @returns {jasmine.Spec}
+     */
     jasmine.Spec.prototype.runs = function (func) {
         var block = new jasmine.Block(this.env, func, this),
             spec = specifcation;
         action = request.getParameter("action");
-        log.info('specifcation is found ' + spec);
+        log.debug('specifcation is found ' + spec);
         // replace to id for this.env.currentSpec.suite.description
 
         //checking 'listSpecs' is called then do not added all in to execution list for to skip it.
@@ -30,6 +40,9 @@ var cola = (function () {
         return this;
     };
 
+    /**
+     * overide next_ in jasmine
+     */
     jasmine.Queue.prototype.next_ = function () {
         var self = this;
         var goAgain = true;
@@ -89,8 +102,8 @@ var cola = (function () {
         }
     };
 
-    /*
-     * function execute calling runner to starting testing after identification
+    /**
+     * function execute calling runner to starting testing after identification (overridering)
      * url and location pattern to be executed
      *
      */
@@ -100,13 +113,19 @@ var cola = (function () {
         }
     };
 
+    /*
+     * END of jasmine over overriding.
+     */
+
     /**
      * run is main function that will be called from app test level
      * this funtion will register the reporter for ENV in jasmine
      *
      */
     var run = function () {
-        log.info(request.getContentType() + 'Called the run for colaaaaaaaaaaa-------' + request.getHeader("User-Agent"));
+        //log.info(request.getContentType() + 'Called the run for colaaaaaaaaaaa-------' + request.getHeader("User-Agent")+':');
+        //log.info(request.getRequestURI()+'--------- '+request.getRequestURI().indexOf(".")+'<-->'+request.getRequestURI().length-5);
+        //log.info(request.getRequestURI().indexOf(".") > request.getRequestURI().length-5);
         var jasmineEnv = jasmine.getEnv(),
             renderingFormat = request.getParameter('format');
         // line can be uncommented for User-Agent/Accept to get type
@@ -121,7 +140,7 @@ var cola = (function () {
             // }else if (renderingFormat == 'json'){
             var jsonReporter = new jasmine.JSONReporter();
             jasmineEnv.addReporter(jsonReporter);
-        } else if (renderingFormat == 'html') {
+        } else if (request.getHeader("User-Agent") != null && (request.getRequestURI().indexOf('.js') == -1) && (request.getRequestURI().indexOf('.css') == -1)) {
             //file name will variable of String in top - TO-DO
             loadJSToFront('scripts/reporter/lib/dasboard.html');
         }
@@ -142,15 +161,15 @@ var cola = (function () {
             pathMatcher2 = null,
             uriMatcher = new URIMatcher(
                 uri);
-        log.info(uri);
+        log.debug(uri);
 
         // Provide a pattern to be matched against the URL
         if (uriMatcher.match('/{appname}/{test}/{+path}')) {
             // If pattern matches, elements can be accessed from their keys
-            log.info('uriMatcher.elements().path :: ' + uriMatcher.elements().path);
+            log.debug('uriMatcher.elements().path :: ' + uriMatcher.elements().path);
             var indexU = uriMatcher.elements().path.indexOf('utilities');
             if (indexU != -1) {
-                log.info('css or js file request for page.' + uriMatcher.elements().path.substr(indexU + 9));
+                log.debug('css or js file request for page.' + uriMatcher.elements().path.substr(indexU + 9));
                 loadJSToFront('scripts/reporter/lib/' + uriMatcher.elements().path.substr(indexU + 9));
                 return false;
             } else {
@@ -163,16 +182,16 @@ var cola = (function () {
                             .lastIndexOf("/") + 1);
                     }
                 }
-                log.info('path : ' + pathMatcher1 + ',' + pathMatcher2);
+                log.debug('path : ' + pathMatcher1 + ',' + pathMatcher2);
                 return validatedPatten(pathMatcher1, pathMatcher2) && !errorFound;
-                log.info(isExists(pathMatcher1));
-                log.info(isExists(pathMatcher2));
+                log.debug(isExists(pathMatcher1));
+                log.debug(isExists(pathMatcher2));
             }
         }
 
         if (uriMatcher.match('/{appname}/{test}/')) {
             // root pattern for test Directory
-            log.info('getting all file from Require');
+            log.debug('getting all file from Require');
             crawl('/' + uriMatcher.elements().test);
             return !errorFound;
         }
@@ -191,7 +210,7 @@ var cola = (function () {
     var validatedPatten = function (pathMatcher1, pathMatcher2) {
         if (!reqiureFiles(pathMatcher1)) {
             if (!(reqiureFiles(pathMatcher2)) && pathMatcher2 != null && !(isValidPath(pathMatcher1, pathMatcher2))) {
-                log.info("Path not exsting");
+                log.debug("Path not exsting");
                 print({
                     'error': true,
                     'message': 'path \'' + pathMatcher1 + '\' is not valid'
@@ -212,15 +231,15 @@ var cola = (function () {
      * @returns
      */
     var reqiureFiles = function (path) {
-        log.info('requiring from ' + path);
+        log.debug('requiring from ' + path);
         isCompleted = false;
         if (isDirectory(path)) {
             isCompleted = true;
-            log.info("is Dir " + path);
+            log.debug("is Dir " + path);
             crawl(path);
         } else if (isExists(path + TEST_FILE_EXTENSIOIN)) {
             isCompleted = true;
-            log.info("is File " + path + TEST_FILE_EXTENSIOIN);
+            log.debug("is File " + path + TEST_FILE_EXTENSIOIN);
             require(path + TEST_FILE_EXTENSIOIN);
         }
         return isCompleted;
@@ -234,7 +253,7 @@ var cola = (function () {
      */
     var errorFound = false;
     var crawl = function (root) {
-        log.info('crawling on root called ' + root);
+        log.debug('crawling on root called ' + root);
         var file = new File(root),
             list = file.listFiles();
         //stop crawlling if error found
@@ -242,22 +261,22 @@ var cola = (function () {
             return;
         try {
             for (var i = 0; i < list.length && !errorFound; i++) {
-                log.info(i + ' checking files on ' + root);
+                log.debug(i + ' checking files on ' + root);
                 var f = list[i];
 
                 if (f.isDirectory()) {
 
-                    log.info("Dir:" + f.getName());
+                    log.debug("Dir:" + f.getName());
                     crawl(root + '/' + f.getName());
                 } else {
-                    log.info("File:" + f.getName());
+                    log.debug("File:" + f.getName());
                     require(root + '/' + f.getName());
                 }
 
             }
         } catch (error) {
             errorFound = true;
-            log.info('error ocuring on ' + error);
+            log.debug('error ocuring on ' + error);
             var errorMessage = error.message.substring(error.message.indexOf('Requested resource'));
             print({
                 'error': true,
@@ -289,7 +308,7 @@ var cola = (function () {
      * checking client request call 'listsuits'
      */
     var toListSuites = function () {
-        log.info('toListSuites - ' + LIST_ACTION.listSuits);
+        log.debug('toListSuites - ' + LIST_ACTION.listSuits);
         if (action == LIST_ACTION.listSuits) {
             return true;
         } else {
@@ -301,7 +320,7 @@ var cola = (function () {
      * checking client request call 'listspecs'
      */
     var toListSpecs = function () {
-        log.info('toListSpecs - ' + LIST_ACTION.listSpecs);
+        log.debug('toListSpecs - ' + LIST_ACTION.listSpecs);
         if (action == LIST_ACTION.listSpecs) {
             return true;
         } else {
@@ -360,12 +379,15 @@ var cola = (function () {
     var isValidPath = function (path1, path2) {
         var isValid = false;
         if ((isDirectory(path2) || isExists(path2 + TEST_FILE_EXTENSIOIN)) && !(isDirectory(path1) || isExists(path1 + TEST_FILE_EXTENSIOIN))) {
-            log.info('Current URL - path is validated for testspec name.');
+            log.debug('Current URL - path is validated for testspec name.');
             isValid = true;
         }
         return isValid;
     };
 
+    /**
+     * Exposing funtions
+     */
     return {
         run: run,
         loadJSToFront: loadJSToFront,

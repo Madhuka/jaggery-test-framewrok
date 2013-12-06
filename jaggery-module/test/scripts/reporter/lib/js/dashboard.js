@@ -8,8 +8,6 @@ TestApp = new function () {
     failCount = 0;
 
 
-
-
     this.runTest = function () {
         this.countReset();
         // console.log("Run Test"+$("#chk0").val());	
@@ -17,7 +15,7 @@ TestApp = new function () {
 
             // console.log($("#chk"+i+"").is(':checked'));
             if ($('#chk' + i + '').is(':checked')) {
-                ++runningCount;               
+                ++runningCount;
                 $('#basicInfor').html('Test count is ' + testCount + ' running ' + selectedCount + '/' + testCount);
 
 
@@ -107,7 +105,7 @@ TestApp = new function () {
             function (html) {
                 if (!html.error) {
                     $('#basicInfor').html('Test count is' + html.specsCount);
-                    var template = '<table class="table table-hover">{{#.}}<tr><td> <input type="checkbox" id="chk{{id}}" value="{{url}}" onclick="TestApp.handleClick(this)" checked> </td><td>{{name}}<div id="err{{id}}"></div></td><td><div id="res{{id}}"></div></td> </tr>{{/.}}<table>';
+                    var template = '<table class="table table-hover">{{#.}}<tr><td><label> <input type="checkbox" id="chk{{id}}" value="{{url}}" onclick="TestApp.handleClick(this)" checked>  {{fullname}}<div id="err{{id}}"></div> <label> </td><td></td><td><div id="res{{id}}"></div></td> </tr>{{/.}}<table>';
                     var htmlx = Mustache.to_html(template, html.specs);
                     $('#sampleLoc').html(htmlx);
                     testCount = html.specsCount;
@@ -120,8 +118,6 @@ TestApp = new function () {
         selectedCount = testCount;
         this.displayInfoUpdate();
     };
-
-
 
 
 };

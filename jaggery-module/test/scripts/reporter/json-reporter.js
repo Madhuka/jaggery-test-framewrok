@@ -2,6 +2,7 @@ jasmine.JSONReporter = function () {
 
     var startingTime = (new Date()).getTime(),
         log = new Log('jsonReporter');
+
     this.exports = {
         elapsedTime: null,
         specsCount: 0,
@@ -41,8 +42,6 @@ jasmine.JSONReporter = function () {
      */
     this.reportRunnerStarting = function (runner) {
         log.debug('reportRunnerStarting with Jasmine --- version' + runner.env.versionString());
-
-
         if (cola.toListSuites()) {
             this.listAllSuites(runner);
         } else if (cola.toListSpecs()) {
@@ -65,13 +64,19 @@ jasmine.JSONReporter = function () {
                 url: null
             };
             sitex = specs[i];
+            log.info(sitex.description);
+            log.info(sitex.parentSuite);
+            if (sitex.parentSuite) {
+
+                log.info(sitex.parentSuite.description);
+            }
+            log.info(i + '------------------------------------');
             suit.id = sitex.id;
-            suit.name = sitex.getFullName();
-            suit.url = encodeURIComponent(suit.name);
+            suit.name = sitex.description;
+            suit.fullname = sitex.getFullName();
+            suit.url = encodeURIComponent(suit.fullname);
             listEndPoints[i] = suit;
-            //log.debug(i + '-----------specs.length   :: ' + specs[i].env.currentRunner_.queue.blocks.length);
-            log.debug(specs[i].getFullName());
-            //log.debug(specs[i].parentSuite);
+
         }
         this.listexports.specsCount = specLength;
         this.listexports.specs = listEndPoints;
