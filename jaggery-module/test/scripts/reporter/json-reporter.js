@@ -60,7 +60,7 @@ jasmine.JSONReporter = function () {
             listEndPoints = [];
         for (var i = 0; i < specLength; i++) {
             suit = {
-        	    id:null,
+                id: null,
                 name: null,
                 url: null
             };
@@ -73,7 +73,7 @@ jasmine.JSONReporter = function () {
             log.debug(specs[i].getFullName());
             //log.debug(specs[i].parentSuite);
         }
-        this.listexports.specsCount=specLength;
+        this.listexports.specsCount = specLength;
         this.listexports.specs = listEndPoints;
         var outJson = JSON.stringify(this.listexports);
         print(outJson);

@@ -887,6 +887,14 @@ pre code {
   padding-left: 15px;
 }
 
+.col-md-12-x {
+  position: relative;
+  min-height: 1px;
+  padding-right: 0px;
+  padding-bottom: 10px;
+  padding-left: 0px;
+}
+
 .col-xs-1,
 .col-xs-2,
 .col-xs-3,
@@ -5230,7 +5238,7 @@ a.list-group-item.active > .badge,
   margin-bottom: 10px;
   font-size: 18px;
   font-weight: 200;
-  line-height: 2.1428571435;
+  line-height: 1;
   color: inherit;
   background-color: #eeeeee;
 }
@@ -5242,6 +5250,7 @@ a.list-group-item.active > .badge,
 
 .jumbotron p {
   line-height: 1.4;
+   font-size: 14px;
 }
 
 .container .jumbotron {
@@ -7096,4 +7105,8 @@ td.visible-print {
   td.hidden-print {
     display: none !important;
   }
+}
+
+.progress-bar.animate {
+   width: 20%;
 }

@@ -15,7 +15,7 @@ var cola = (function () {
         var block = new jasmine.Block(this.env, func, this),
             spec = specifcation;
         action = request.getParameter("action");
-        log.debug('specifcation is found ' + spec);
+        log.info('specifcation is found ' + spec);
         // replace to id for this.env.currentSpec.suite.description
 
         //checking 'listSpecs' is called then do not added all in to execution list for to skip it.
@@ -106,7 +106,7 @@ var cola = (function () {
      *
      */
     var run = function () {
-        log.debug(request.getContentType() + 'Called the run for colaaaaaaaaaaa-------' + request.getHeader("User-Agent"));
+        log.info(request.getContentType() + 'Called the run for colaaaaaaaaaaa-------' + request.getHeader("User-Agent"));
         var jasmineEnv = jasmine.getEnv(),
             renderingFormat = request.getParameter('format');
         // line can be uncommented for User-Agent/Accept to get type
@@ -122,6 +122,7 @@ var cola = (function () {
             var jsonReporter = new jasmine.JSONReporter();
             jasmineEnv.addReporter(jsonReporter);
         } else if (renderingFormat == 'html') {
+            //file name will variable of String in top - TO-DO
             loadJSToFront('scripts/reporter/lib/dasboard.html');
         }
         jasmineEnv.execute();
@@ -141,15 +142,15 @@ var cola = (function () {
             pathMatcher2 = null,
             uriMatcher = new URIMatcher(
                 uri);
-        log.debug(uri);
+        log.info(uri);
 
         // Provide a pattern to be matched against the URL
         if (uriMatcher.match('/{appname}/{test}/{+path}')) {
             // If pattern matches, elements can be accessed from their keys
-            log.debug('uriMatcher.elements().path :: ' + uriMatcher.elements().path);
+            log.info('uriMatcher.elements().path :: ' + uriMatcher.elements().path);
             var indexU = uriMatcher.elements().path.indexOf('utilities');
             if (indexU != -1) {
-                log.debug('css or js file request for page.' + uriMatcher.elements().path.substr(indexU + 9));
+                log.info('css or js file request for page.' + uriMatcher.elements().path.substr(indexU + 9));
                 loadJSToFront('scripts/reporter/lib/' + uriMatcher.elements().path.substr(indexU + 9));
                 return false;
             } else {
@@ -162,18 +163,18 @@ var cola = (function () {
                             .lastIndexOf("/") + 1);
                     }
                 }
-                log.debug('path : ' + pathMatcher1 + ',' + pathMatcher2);
-                return validatedPatten(pathMatcher1, pathMatcher2);
-                log.debug(isExists(pathMatcher1));
-                log.debug(isExists(pathMatcher2));
+                log.info('path : ' + pathMatcher1 + ',' + pathMatcher2);
+                return validatedPatten(pathMatcher1, pathMatcher2) && !errorFound;
+                log.info(isExists(pathMatcher1));
+                log.info(isExists(pathMatcher2));
             }
         }
 
         if (uriMatcher.match('/{appname}/{test}/')) {
             // root pattern for test Directory
-            log.debug('getting all file from Require');
+            log.info('getting all file from Require');
             crawl('/' + uriMatcher.elements().test);
-            return true;
+            return !errorFound;
         }
 
     };
@@ -190,7 +191,7 @@ var cola = (function () {
     var validatedPatten = function (pathMatcher1, pathMatcher2) {
         if (!reqiureFiles(pathMatcher1)) {
             if (!(reqiureFiles(pathMatcher2)) && pathMatcher2 != null && !(isValidPath(pathMatcher1, pathMatcher2))) {
-                log.debug("Path not exsting");
+                log.info("Path not exsting");
                 print({
                     'error': true,
                     'message': 'path \'' + pathMatcher1 + '\' is not valid'
@@ -211,15 +212,15 @@ var cola = (function () {
      * @returns
      */
     var reqiureFiles = function (path) {
-        log.debug('requiring from ' + path);
+        log.info('requiring from ' + path);
         isCompleted = false;
         if (isDirectory(path)) {
             isCompleted = true;
-            log.debug("is Dir " + path);
+            log.info("is Dir " + path);
             crawl(path);
         } else if (isExists(path + TEST_FILE_EXTENSIOIN)) {
             isCompleted = true;
-            log.debug("is File " + path + TEST_FILE_EXTENSIOIN);
+            log.info("is File " + path + TEST_FILE_EXTENSIOIN);
             require(path + TEST_FILE_EXTENSIOIN);
         }
         return isCompleted;
@@ -231,26 +232,41 @@ var cola = (function () {
      * @param root
      *            is path of directory to search for test specification files
      */
+    var errorFound = false;
     var crawl = function (root) {
-        log.debug('crawling on root called ' + root);
+        log.info('crawling on root called ' + root);
         var file = new File(root),
             list = file.listFiles();
-
-        if (list == null)
+        //stop crawlling if error found
+        if (list == null || errorFound)
             return;
+        try {
+            for (var i = 0; i < list.length && !errorFound; i++) {
+                log.info(i + ' checking files on ' + root);
+                var f = list[i];
 
-        for (var i = 0; i < list.length; i++) {
-            log.debug(i + ' checking files on ' + root);
-            var f = list[i];
-            if (f.isDirectory()) {
+                if (f.isDirectory()) {
 
-                log.debug("Dir:" + f.getName());
-                crawl(root + '/' + f.getName());
-            } else {
-                log.debug("File:" + f.getName());
-                require(root + '/' + f.getName());
+                    log.info("Dir:" + f.getName());
+                    crawl(root + '/' + f.getName());
+                } else {
+                    log.info("File:" + f.getName());
+                    require(root + '/' + f.getName());
+                }
+
             }
+        } catch (error) {
+            errorFound = true;
+            log.info('error ocuring on ' + error);
+            var errorMessage = error.message.substring(error.message.indexOf('Requested resource'));
+            print({
+                'error': true,
+                'message': errorMessage
+            });
+
+            return;
         }
+
     };
 
     /**
@@ -273,7 +289,7 @@ var cola = (function () {
      * checking client request call 'listsuits'
      */
     var toListSuites = function () {
-        log.debug('toListSuites - ' + LIST_ACTION.listSuits);
+        log.info('toListSuites - ' + LIST_ACTION.listSuits);
         if (action == LIST_ACTION.listSuits) {
             return true;
         } else {
@@ -285,7 +301,7 @@ var cola = (function () {
      * checking client request call 'listspecs'
      */
     var toListSpecs = function () {
-        log.debug('toListSpecs - ' + LIST_ACTION.listSpecs);
+        log.info('toListSpecs - ' + LIST_ACTION.listSpecs);
         if (action == LIST_ACTION.listSpecs) {
             return true;
         } else {
@@ -344,7 +360,7 @@ var cola = (function () {
     var isValidPath = function (path1, path2) {
         var isValid = false;
         if ((isDirectory(path2) || isExists(path2 + TEST_FILE_EXTENSIOIN)) && !(isDirectory(path1) || isExists(path1 + TEST_FILE_EXTENSIOIN))) {
-            log.debug('Current URL - path is validated for testspec name.');
+            log.info('Current URL - path is validated for testspec name.');
             isValid = true;
         }
         return isValid;
