@@ -1,5 +1,5 @@
 <%
-require("test").cola.run();
 
+require("test").cola.run();
 	
 %>

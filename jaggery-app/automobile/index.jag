@@ -4,8 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head></head>
 
-<body><h2>Automobile App </h2>
-<a href="http://localhost:9763/automobileJS/test/">Visit To Test Cars</a>
+<body>
+
+	<h2>Automobile App</h2>
+	<a href="http://localhost:9763/automobileapp/test/?format=html">Visit To Test Cars</a>
 
 </body>
 
