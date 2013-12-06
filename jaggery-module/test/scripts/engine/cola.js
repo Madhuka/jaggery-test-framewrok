@@ -322,9 +322,9 @@ var cola = (function () {
     };
 
     /**
-     * checking client request call 'test Specifcation' in url
+     * checking client request call 'test specifcation' in url
      */
-    var getSpecifcation = function () {
+    var getSpecification = function () {
         return specifcation;
     };
 
@@ -386,7 +386,7 @@ var cola = (function () {
         loadJSToFront: loadJSToFront,
         toListSuites: toListSuites,
         toListSpecs: toListSpecs,
-        getSpecifcation: getSpecifcation
+        getSpecification: getSpecification
     };
 
 }());
