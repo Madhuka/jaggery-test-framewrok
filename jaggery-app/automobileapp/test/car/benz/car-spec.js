@@ -1,13 +1,13 @@
 //define test suites
 
-var Car = require('../../../jaggeryCar.jag').Car;
+var Car = require('motorcar').motorcar;
 
-describe('TestSuite-KIA', function() {
+describe('TestSuite-Bez', function() {
 
     //config data for helping to test
     var myCar = null, myCarConfig = {
-	name : 'rio',
-	engineSize : 1300,
+	name : 's520',
+	engineSize : 2300,
 	gearMode:'automatic'
     };
 
@@ -18,17 +18,18 @@ describe('TestSuite-KIA', function() {
 
     //First test for to check was car built fine.
     it('Testing Car name and Engineer size is validate to Drive', function() {
-	expect(myCar.name).toEqual('rio');
-	expect(myCar.engineSize).toEqual(1300);
+	expect(myCar.name).toEqual('s520');
+	expect(myCar.engineSize).toEqual(2300);
+	expect(myCar.gearMode).toEqual('automatic');
     });
 
     // testing car (function) racing by enginee
     it('Checking Engineer capacity for Express way to ride', function() {
-	expect(myCar.getEngineSize()).toEqual(1300);
+	expect(myCar.getEngineSize()).toEqual(2300);
     });
 
     it('UpgradeEngineSize to testing', function() {
-	expect(myCar.upgradeEngineSize()).toBe(1800);
+	expect(myCar.upgradeEngineSize()).toBe(3100);
 
     });
     
