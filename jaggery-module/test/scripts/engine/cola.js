@@ -287,12 +287,20 @@ var cola = (function () {
         print(file.getStream());
     };
 
+    /**
+     * function absolute to get absolute path of file
+     * @param path (file path) module located file path 
+     */
     var absolute = function (path) {
         var process = require('process');
         var parent = 'file:///' + (process.getProperty('jaggery.home') || process.getProperty('carbon.home')).replace(/[\\]/g, '/').replace(/^[\/]/g, '');
         return parent + '/modules/test/' + path;
     };
 
+    /**
+     * function errorMessagePasser will builder meaningful error message for the test user/test writter
+     * @param message will error message
+     */
     var errorMessagePasser = function (message) {
         var errorMessage = null;
         log.debug('errorMessagePasser' + message);
@@ -301,7 +309,7 @@ var cola = (function () {
             log.debug('Resource missing error' + message);
         } else if ((i = message.indexOf('java.lang.NullPointerException ')) != -1) {
             log.debug('Directory missing error' + i);
-            errorMessage = 'Test Spec file is pointing to non exiting directory.There is a ' + message.substring(i);
+            errorMessage = 'Test Spec file is pointing to non existing directory.There is a ' + message.substring(i);
         } else if ((i = message.indexOf('syntax errors')) != -1) {
             log.debug('syntax errors' + message);
             errorMessage = 'Test Spec file is having a ' + message.substring(i);
@@ -318,6 +326,7 @@ var cola = (function () {
                 'message': errorMessage
             });
     };
+    
     /**
      * checking client request call 'listsuits'
      */

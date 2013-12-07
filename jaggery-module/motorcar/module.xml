@@ -1,0 +1,6 @@
+<module name="motorcar" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <script>
+        <name>motorcar</name>
+        <path>scripts/motorcar.js</path>
+    </script>
+</module>
