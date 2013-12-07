@@ -266,15 +266,13 @@ var cola = (function () {
 
             }
         } catch (error) {
+
             errorFound = true;
-            log.debug('error ocuring on crawling. Error is ' + error);
-            var errorMessage = error.message.substring(error.message.indexOf('Requested resource'));
-            print({
-                'error': true,
-                'message': errorMessage
-            });
+            log.info('error ocuring on crawling. Error is ' + error);
+            errorMessageBuilder(error.message);
 
             return;
+
         }
 
     };
@@ -295,6 +293,15 @@ var cola = (function () {
         return parent + '/modules/test/' + path;
     };
 
+    var errorMessageBuilder = function (message) {
+        errorMessage = message.substring(message.indexOf('Requested resource'));
+        errorMessage = message.substring(message.indexOf('syntax errors'));
+        if (request.getContentType())
+            print({
+                'error': true,
+                'message': errorMessage
+            });
+    };
     /**
      * checking client request call 'listsuits'
      */
