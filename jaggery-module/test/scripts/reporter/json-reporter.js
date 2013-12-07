@@ -8,6 +8,7 @@ jasmine.JSONReporter = function () {
         specsCount: 0,
         specsPassed: 0,
         specsFailed: 0,
+        specsResult: 'Passed',
         suites: []
     },
 
@@ -23,22 +24,24 @@ jasmine.JSONReporter = function () {
         this.exports.elapsedTime = parseInt((new Date()).getTime() - startingTime, 10) + "ms";
         var outJson = JSON.stringify(this.exports);
         log.debug(outJson);
-        log.debug('reportRunnerResult : cola.toListSuites() ' + cola.toListSuites());
         if (!cola.toListSuites() && !cola.toListSpecs()) {
+
+            if (this.exports.specsCount - this.exports.specsPassed !== 0) {
+                this.loged('Exiting with errors');
+            } else {
+                this.loged('Exiting with  ' + this.exports.specsCount + ' test suite with passing ');
+            }
             print(outJson);
         }
-        if (this.exports.specsCount - this.exports.specsPassed !== 0) {
-            this.loged('Exiting with errors');
-        } else {
-            this.loged('Exiting with ' + this.exports.specsCount + ' passed specs ');
-        }
+
 
     },
 
     /**
-     * jasmine API for reporting
-     * will be called report initialization
-     * @param jasmine runner
+     * jasmine API for reporting will be called report initialization
+     *
+     * @param jasmine
+     *                runner
      *
      */
     this.reportRunnerStarting = function (runner) {
@@ -64,13 +67,17 @@ jasmine.JSONReporter = function () {
                 name: null,
                 url: null
             };
+
             currentSite = specs[i];
-            // log.debug(currentSite.toSource());
-            // log.debug('--------------------'+currentSite.env.currentSpec.toSource());
-            // log.debug('--------------------');
+            fullName = currentSite.getFullName();
+            name = currentSite.description;
+            parentName = fullName.substr(0, fullName.indexOf(name));
+
+            //adding element to test suit
             suit.id = currentSite.id;
-            suit.name = currentSite.description;
-            suit.fullname = currentSite.getFullName();
+            suit.name = name;
+            suit.fullname = fullName;
+            suit.parentName = parentName;
             suit.url = encodeURIComponent(suit.fullname);
             listEndPoints[i] = suit;
 
@@ -134,6 +141,7 @@ jasmine.JSONReporter = function () {
                 this.exports.specsPassed++;
             } else {
                 this.exports.specsFailed++;
+                this.exports.specsResult = 'Failed';
             }
             this.builderMessage(spec);
         }
@@ -145,15 +153,22 @@ jasmine.JSONReporter = function () {
     this.builderMessage = function (spec) {
 
 
-        var l = spec.results().items_.length;
-        var items = new Array();
+        var l = spec.results().items_.length,
+            items = new Array(),
+            itemResult = 'Passed.';
         for (var i = 0; i < l; i++) {
+            if (spec.results().items_[i].message != 'Passed.') {
+                itemResult = 'Failed';
+            }
             log.debug(spec.results().items_[i]);
             items[i] = {
                 type: spec.results().items_[i].type,
                 message: spec.results().items_[i].message
+
             };
+
         }
+
         // log.debug(spec.results());
         // log.debug(spec.suite.toSource());
         this.exports.suites.push({
@@ -164,6 +179,7 @@ jasmine.JSONReporter = function () {
             passedCount: spec.results().passedCount,
             failedCount: spec.results().failedCount,
             skipped: spec.results().skipped,
+            itemResult: itemResult,
             items: items
 
         });
@@ -171,10 +187,10 @@ jasmine.JSONReporter = function () {
     },
 
     /**
-     * Will be used to logged in finally
+     * Will be used to logged in finally/ make this info to get log for jsonreport finally.
      * @param arguments String message to passing for log
      */
     this.loged = function (arguments) {
-        log.debug(arguments);
+        log.info(arguments);
     };
 };

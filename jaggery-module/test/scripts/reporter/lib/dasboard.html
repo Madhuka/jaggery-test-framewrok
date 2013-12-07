@@ -35,10 +35,12 @@
                         Select
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul id="dropdown-menu-button" class="dropdown-menu dropdown-menu-form">
                         <li><a onclick="TestApp.selectAll(false)">None</a>
                         </li>
                         <li><a onclick="TestApp.selectAll(true)">All</a>
+                        </li>
+                        <li><a onclick="TestApp.selectFail()">Failed</a>
                         </li>
                     </ul>
                 </div>

@@ -7109,3 +7109,9 @@ td.visible-print {
 .progress-bar.animate {
    width: 20%;
 }
+
+ul.dropdown-menu-form {
+    padding: 5px 10px 0;
+    max-height: 300px;
+    overflow-y: scroll;
+}

@@ -799,7 +799,6 @@ jasmine.Env.prototype.addReporter = function(reporter) {
 };
 var log = new Log();
 jasmine.Env.prototype.execute = function() {
-	log.info('execute..........sssssssssss')
   this.currentRunner_.execute();
 };
 

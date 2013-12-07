@@ -154,7 +154,7 @@ var cola = (function () {
             pathMatcher1 = null,
             pathMatcher2 = null,
             uriMatcher = new URIMatcher(uri);
-        
+
 
         // Provide a pattern to be matched against the URL
         if (uriMatcher.match('/{appname}/{test}/{+path}')) {

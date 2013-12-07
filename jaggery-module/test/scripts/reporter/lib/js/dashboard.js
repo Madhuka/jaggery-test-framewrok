@@ -6,7 +6,11 @@ TestApp = new function () {
     runningCount = 0;
     passCount = 0;
     failCount = 0;
+    failArray = [];
 
+    /**
+     * function is willl be called to run the test
+     */
     this.runTest = function () {
         this.countReset();
         for (var i = 0; i < testCount; i++) {
@@ -23,6 +27,10 @@ TestApp = new function () {
         this.displaySummaryReport();
     },
 
+    /**
+     * function will selectAll depending on parameter
+     * @param call {boolean} true for all and false for none
+     */
     this.selectAll = function (call) {
         var i = 0;
         for (; i < testCount; i++) {
@@ -37,6 +45,45 @@ TestApp = new function () {
         this.displayInfoUpdate();
     },
 
+    /**
+     * function will pick all failed test after test are execution
+     */
+    this.selectFail = function () {
+        selectedCount = 0;
+        this.selectAll(false);
+        var i = 0;
+        for (; i < failArray.length; i++) {
+            $('#chk' + failArray[i] + '').prop('checked', true);
+            selectedCount++;
+        }
+
+        this.displayInfoUpdate();
+    },
+
+    /**
+     * function will pick all test suit for test spec
+     * @param testSpec - name of testSpec
+     */
+    this.selectSpec = function (testSpec) {
+        selectedCount = 0;
+        this.selectAll(false);
+        var i = 0;
+        for (; i < testCount; i++) {
+
+            if ($('#chk' + i).attr('parent').indexOf(testSpec) == 0) {
+                $('#chk' + i + '').prop('checked', true);
+                selectedCount++;
+            }
+        }
+
+        this.displayInfoUpdate();
+    },
+
+
+    /**
+     * function will hanlde test list picker
+     * @param checkBox
+     */
     this.handleClick = function (checkBox) {
         if (checkBox.checked) {
             selectedCount++;
@@ -46,22 +93,25 @@ TestApp = new function () {
         this.displayInfoUpdate();
     },
 
+    /**
+     * function will make ajax call for test
+     * @param testId - test suite ID in dasboard
+     */
     this.makeCallToTest = function (testID) {
         $('#basicInfor').html('Test count is ' + testCount + ' running ' + selectedCount + '/' + testCount);
 
 
         TestAppUtil.makeJsonRequest(document.location.pathname + $('#chk' + testID + '').val(), null, function (html) {
             if (!html.error) {
-                if (html.suites[0].items[0].message == "Passed.") {
-                    TestApp.testPass(testID,html);
+                if (html.suites[0].itemResult == "Passed.") {
+                    TestApp.testPass(testID, html);
                 } else {
-                    TestApp.testFail(testID,html);
+                    TestApp.testFail(testID, html);
                 }
-                //console.log(htmlx.suites[0].itemCount);
                 TestApp.displayInfoUpdate();
             } else {
 
-                TestApp.testCallError(testID,html);
+                TestApp.testCallError(testID, html);
             }
         });
 
@@ -69,18 +119,28 @@ TestApp = new function () {
     },
 
 
+    /**
+     * will update UI for select count for test suites
+     */
     this.displayInfoUpdate = function () {
         $('#basicInfor').html(selectedCount + ' selected out of ' + testCount);
     },
 
-    this.testPass = function (testID,data) {
+    /**
+     * function testPass will handle action after test suite is passed
+     */
+    this.testPass = function (testID, data) {
         passCount++;
         $('#err' + testID + '').html('');
         $('#res' + testID + '').html('<div class="alert alert-success">' + data.suites[0].items[0].message + '</div>');
     },
 
-    this.testFail = function (testID,data) {
+    /**
+     * function testPass will handle action after test suite is fails
+     */
+    this.testFail = function (testID, data) {
         failCount++;
+        failArray.push(testID);
         var errMsgList = '';
         $('#res' + testID + '').html('<div class="alert alert-danger"> Failed.</div>');
         for (var j = 0; l = data.suites[0].itemCount, j < l; j++) {
@@ -92,40 +152,55 @@ TestApp = new function () {
         $('#err' + testID + '').html('<div><code>' + errMsgList + '</code></div>');
     },
 
-
-    this.testCallError = function (testID,data) {
+    /**
+     * function testPass will handle action after test suite meeting error in calling
+     */
+    this.testCallError = function (testID, data) {
         $('#res' + testID + '').html('<div class="alert alert-danger">Fail to Call the Test</div>');
         $('#err' + testID + '').html('<div><code>' + data.message + '</code></div>');
     },
 
-
+    /**
+     * function will display summary report of test suites
+     */
     this.displaySummaryReport = function () {
         $('#summaryReport').html(
-            '<p>Pass Count out of Run count: ' + passCount + '/' + runningCount + '<br>Fail Count out of Run count: ' + failCount + '/' + runningCount + '<br>Run Count out of Selected Test: ' + runningCount + '/' + selectedCount + '</p>');
+            '<p>Pass Count out of Run count: <b>' + passCount + '/' + runningCount + '</b><br>Fail Count out of Run count: <b>' + failCount + '/' + runningCount + '</b><br>Run Count out of Selected Test: ' + runningCount + '/' + selectedCount + '</p>');
     },
 
+    /**
+     * function will display display error message
+     */
     this.displayErrorMessage = function (message) {
         $('#summaryReport').html('<p>Error!</p>');
         $('#controllers').html('');
         $('#sampleLoc').html('<div class="alert alert-danger">Error! ' + message + '</div>');
     },
 
+    /**
+     * function will reset count in test
+     */
     this.countReset = function () {
         runningCount = 0;
         passCount = 0;
         failCount = 0;
+        failArray = [];
     },
 
+    /**
+     * function will load test suite List
+     */
     this.loadSuiteList = function () {
         //in here we will get warning on (that to be fixed jquery http://bugs.jquery.com/ticket/14320)
-        //console.log('Loading loadSuiteList');
         TestAppUtil.makeJsonRequest(document.location.pathname, {
                 action: 'listsuits'
             },
             function (html) {
                 if (!html.error) {
+
+                    //templete for suites
                     $('#basicInfor').html('Test count is' + html.specsCount);
-                    var template = '<table class="table table-hover">{{#.}}<tr><td><label> <input type="checkbox" id="chk{{id}}" value="{{url}}" onclick="TestApp.handleClick(this)" checked>  {{fullname}}<div id="err{{id}}"></div> <label> </td><td></td><td><div id="res{{id}}"></div></td> </tr>{{/.}}<table>';
+                    var template = '<table class="table table-hover">{{#.}}<tr><td><label> <input type="checkbox" id="chk{{id}}" value="{{url}}" parent="{{parentName}}" onclick="TestApp.handleClick(this)" checked>  {{name}} <b>[{{parentName}}]</b><div id="err{{id}}"></div> <label> </td><td><div id="res{{id}}"></div></td> </tr>{{/.}}<table>';
                     var htmlx = Mustache.to_html(template, html.specs);
                     $('#sampleLoc').html(htmlx);
                     testCount = html.specsCount;
@@ -136,8 +211,33 @@ TestApp = new function () {
 
             });
         selectedCount = testCount;
+        this.loadSpecList();
         this.displayInfoUpdate();
     };
+
+    /**
+     * function will load test Spec List
+     */
+    this.loadSpecList = function () {
+
+        TestAppUtil.makeJsonRequest(document.location.pathname, {
+                action: 'listspecs'
+            },
+            function (html) {
+                if (!html.error) {
+                    $('#dropdown-menu-button').append('<li class="divider"></li>');
+                    var SpecTemplate = '{{#.}}<li><a onclick="TestApp.selectSpec(\'{{name}}\')">{{name}}</a></li>{{/.}}';
+                    var htmlSpec = Mustache.to_html(SpecTemplate, html.specs);
+                    $('#dropdown-menu-button').append(htmlSpec);
+                } else {
+                    TestApp.displayErrorMessage(html.message);
+
+                }
+
+            });
+
+    };
+
 
 
 };
