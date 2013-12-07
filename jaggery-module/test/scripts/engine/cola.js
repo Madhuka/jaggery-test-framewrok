@@ -268,8 +268,8 @@ var cola = (function () {
         } catch (error) {
 
             errorFound = true;
-            log.info('error ocuring on crawling. Error is ' + error);
-            errorMessageBuilder(error.message);
+            log.debug('error ocuring on crawling. Error is ' + error);
+            errorMessagePasser(error.message);
 
             return;
 
@@ -293,9 +293,25 @@ var cola = (function () {
         return parent + '/modules/test/' + path;
     };
 
-    var errorMessageBuilder = function (message) {
-        errorMessage = message.substring(message.indexOf('Requested resource'));
-        errorMessage = message.substring(message.indexOf('syntax errors'));
+    var errorMessagePasser = function (message) {
+        var errorMessage = null;
+        log.debug('errorMessagePasser' + message);
+        if ((i = message.indexOf('Requested resource')) != -1) {
+            errorMessage = 'Test Spec file is pointing to non exiting files.' + message.substring(i);
+            log.debug('Resource missing error' + message);
+        } else if ((i = message.indexOf('java.lang.NullPointerException ')) != -1) {
+            log.debug('Directory missing error' + i);
+            errorMessage = 'Test Spec file is pointing to non exiting directory.There is a ' + message.substring(i);
+        } else if ((i = message.indexOf('syntax errors')) != -1) {
+            log.debug('syntax errors' + message);
+            errorMessage = 'Test Spec file is having a ' + message.substring(i);
+        } else if ((i = message.indexOf('A module')) != -1) {
+            log.debug('jaggery module error' + message);
+            errorMessage = 'Test Spec file is try to accessing non existing jaggery module. ' + message.substring(i);
+
+        } else {
+            errorMessage = message;
+        }
         if (request.getContentType())
             print({
                 'error': true,
