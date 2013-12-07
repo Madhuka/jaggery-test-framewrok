@@ -2,9 +2,8 @@ var cola = (function () {
 
     // for test specification name identification
     var specifcation = null,
-     	errorFound = false,
+        log = new Log('cola - jaggery test framework'),
         action = null;
-    	log = new Log('Cola');
 
     //test spec extension
     var TEST_FILE_EXTENSIOIN = '.js',
@@ -104,8 +103,6 @@ var cola = (function () {
         }
     };
 
-   
-
     /*
      * END of jasmine over overriding.
      */
@@ -116,9 +113,9 @@ var cola = (function () {
      *
      */
     var run = function () {
-        //log.info(request.getContentType() + 'Called the run for colaaaaaaaaaaa-------' + request.getHeader("User-Agent")+':');
-        //log.info(request.getRequestURI()+'--------- '+request.getRequestURI().indexOf(".")+'<-->'+request.getRequestURI().length-5);
-        //log.info(request.getRequestURI().indexOf(".") > request.getRequestURI().length-5);
+        //log.debug(request.getContentType() + 'Called the run for colaaaaaaaaaaa-------' + request.getHeader("User-Agent")+':');
+        //log.debug(request.getRequestURI()+'--------- '+request.getRequestURI().indexOf(".")+'<-->'+request.getRequestURI().length-5);
+        //log.debug(request.getRequestURI().indexOf(".") > request.getRequestURI().length-5);
         var jasmineEnv = jasmine.getEnv(),
             renderingFormat = request.getParameter('format');
         // line can be uncommented for User-Agent/Accept to get type
@@ -129,18 +126,19 @@ var cola = (function () {
         if (renderingFormat == 'simplehtml') {
             var simpleHtmlReporterx = new jasmine.simpleHTMLReporter();
             jasmineEnv.addReporter(simpleHtmlReporterx);
+
         } else if (request.getContentType() == 'application/json') {
             // }else if (renderingFormat == 'json'){
             var jsonReporter = new jasmine.JSONReporter();
             jasmineEnv.addReporter(jsonReporter);
+
         } else if (request.getHeader("User-Agent") != null && (request.getRequestURI().indexOf('.js') == -1) && (request.getRequestURI().indexOf('.css') == -1)) {
             //file name will variable of String in top - TO-DO
-            loadJSToFront('scripts/reporter/lib/dasboard.html');
+            loadFileToFront('scripts/reporter/lib/dasboard.html');
         }
         if (urlMapper()) {
             jasmineEnv.execute();
         }
-        
     };
 
     /**
@@ -156,7 +154,7 @@ var cola = (function () {
             pathMatcher1 = null,
             pathMatcher2 = null,
             uriMatcher = new URIMatcher(uri);
-        log.debug(uri);
+        
 
         // Provide a pattern to be matched against the URL
         if (uriMatcher.match('/{appname}/{test}/{+path}')) {
@@ -165,7 +163,7 @@ var cola = (function () {
             var indexU = uriMatcher.elements().path.indexOf('utilities');
             if (indexU != -1) {
                 log.debug('css or js file request for page.' + uriMatcher.elements().path.substr(indexU + 9));
-                loadJSToFront('scripts/reporter/lib/' + uriMatcher.elements().path.substr(indexU + 9));
+                loadFileToFront('scripts/reporter/lib/' + uriMatcher.elements().path.substr(indexU + 9));
                 return false;
             } else {
                 pathMatcher1 = '/' + uriMatcher.elements().test + '/' + uriMatcher.elements().path;
@@ -177,8 +175,8 @@ var cola = (function () {
                             .lastIndexOf("/") + 1);
                     }
                 }
-                log.debug('path : ' + pathMatcher1 + ',' + pathMatcher2);
-                return validatepattern(pathMatcher1, pathMatcher2) && !errorFound;                
+                //log.debug(request.getContentType() + ' path : ' + pathMatcher1 + ',' + pathMatcher2);
+                return validatepattern(pathMatcher1, pathMatcher2) && !errorFound;
             }
         }
 
@@ -202,7 +200,7 @@ var cola = (function () {
      */
     var validatepattern = function (pathMatcher1, pathMatcher2) {
         if (!requireFiles(pathMatcher1)) {
-            if (!(requireFiles(pathMatcher2)) && pathMatcher2 != null && !(isValidPath(pathMatcher1, pathMatcher2))) {
+            if (!(requireFiles(pathMatcher2)) && pathMatcher2 && !(isValidPath(pathMatcher1, pathMatcher2)) && request.getContentType()) {
                 log.debug("Path not exsting");
                 print({
                     'error': true,
@@ -244,7 +242,7 @@ var cola = (function () {
      * @param root
      *            is path of directory to search for test specification files
      */
-
+    var errorFound = false;
     var crawl = function (root) {
         log.debug('crawling on root called ' + root);
         var file = new File(root),
@@ -269,7 +267,7 @@ var cola = (function () {
             }
         } catch (error) {
             errorFound = true;
-            log.debug('error ocuring on ' + error);
+            log.debug('error ocuring on crawling. Error is ' + error);
             var errorMessage = error.message.substring(error.message.indexOf('Requested resource'));
             print({
                 'error': true,
@@ -286,7 +284,7 @@ var cola = (function () {
      * @param path of the file inside jaggery module
      * @returns file will be return for front end
      */
-    var loadJSToFront = function (filePath) {
+    var loadFileToFront = function (filePath) {
         var file = new File(absolute(filePath));
         print(file.getStream());
     };
@@ -322,7 +320,7 @@ var cola = (function () {
     };
 
     /**
-     * checking client request call 'test specifcation' in url
+     * checking client request call 'test Specifcation' in url
      */
     var getSpecification = function () {
         return specifcation;
@@ -383,7 +381,7 @@ var cola = (function () {
      */
     return {
         run: run,
-        loadJSToFront: loadJSToFront,
+        loadFileToFront: loadFileToFront,
         toListSuites: toListSuites,
         toListSpecs: toListSpecs,
         getSpecification: getSpecification

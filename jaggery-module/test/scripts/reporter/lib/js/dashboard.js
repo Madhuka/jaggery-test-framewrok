@@ -7,43 +7,17 @@ TestApp = new function () {
     passCount = 0;
     failCount = 0;
 
-
     this.runTest = function () {
         this.countReset();
-        // console.log("Run Test"+$("#chk0").val());	
         for (var i = 0; i < testCount; i++) {
+            testID = i;
+            $('#err' + testID + '').html('');
 
-            // console.log($("#chk"+i+"").is(':checked'));
-            if ($('#chk' + i + '').is(':checked')) {
+            if ($('#chk' + testID + '').is(':checked')) {
                 ++runningCount;
-                $('#basicInfor').html('Test count is ' + testCount + ' running ' + selectedCount + '/' + testCount);
-
-
-
-                TestAppUtil.makeJsonRequest(document.location.pathname + $('#chk' + i + '').val(), null, function (htmlx) {
-                    if (htmlx.suites[0].items[0].message == "Passed.") {
-                        passCount++;
-                        $('#err' + i + '').html('');
-                        $('#res' + i + '').html('<div class="alert alert-success">' + htmlx.suites[0].items[0].message + '</div>');
-                    } else {
-                        failCount++;
-                        var errMsgList = '';
-                        $('#res' + i + '').html('<div class="alert alert-danger"> Failed.</div>');
-                        for (var j = 0; l = htmlx.suites[0].itemCount, j < l; j++) {
-                            if (htmlx.suites[0].items[j].message != 'Passed.') {
-                                errMsgList += htmlx.suites[0].items[j].message + '<br>';
-
-                            }
-                        }
-                        $('#err' + i + '').html('<div><code>' + errMsgList + '</code></div>');
-
-                    }
-                    //console.log(htmlx.suites[0].itemCount);
-                    TestApp.displayInfoUpdate();
-                });
-
+                this.makeCallToTest(testID);
             } else {
-                $('#res' + i + '').html('<div  class="alert alert-info">Not Selected</div>');
+                $('#res' + testID + '').html('<div  class="alert alert-info">Not Selected</div>');
             }
         }
         this.displaySummaryReport();
@@ -72,11 +46,57 @@ TestApp = new function () {
         this.displayInfoUpdate();
     },
 
+    this.makeCallToTest = function (testID) {
+        $('#basicInfor').html('Test count is ' + testCount + ' running ' + selectedCount + '/' + testCount);
+
+
+        TestAppUtil.makeJsonRequest(document.location.pathname + $('#chk' + testID + '').val(), null, function (html) {
+            if (!html.error) {
+                if (html.suites[0].items[0].message == "Passed.") {
+                    TestApp.testPass(testID,html);
+                } else {
+                    TestApp.testFail(testID,html);
+                }
+                //console.log(htmlx.suites[0].itemCount);
+                TestApp.displayInfoUpdate();
+            } else {
+
+                TestApp.testCallError(testID,html);
+            }
+        });
+
+
+    },
+
 
     this.displayInfoUpdate = function () {
         $('#basicInfor').html(selectedCount + ' selected out of ' + testCount);
     },
 
+    this.testPass = function (testID,data) {
+        passCount++;
+        $('#err' + testID + '').html('');
+        $('#res' + testID + '').html('<div class="alert alert-success">' + data.suites[0].items[0].message + '</div>');
+    },
+
+    this.testFail = function (testID,data) {
+        failCount++;
+        var errMsgList = '';
+        $('#res' + testID + '').html('<div class="alert alert-danger"> Failed.</div>');
+        for (var j = 0; l = data.suites[0].itemCount, j < l; j++) {
+            if (data.suites[0].items[j].message != 'Passed.') {
+                errMsgList += data.suites[0].items[j].message + '<br>';
+
+            }
+        }
+        $('#err' + testID + '').html('<div><code>' + errMsgList + '</code></div>');
+    },
+
+
+    this.testCallError = function (testID,data) {
+        $('#res' + testID + '').html('<div class="alert alert-danger">Fail to Call the Test</div>');
+        $('#err' + testID + '').html('<div><code>' + data.message + '</code></div>');
+    },
 
 
     this.displaySummaryReport = function () {
@@ -98,7 +118,7 @@ TestApp = new function () {
 
     this.loadSuiteList = function () {
         //in here we will get warning on (that to be fixed jquery http://bugs.jquery.com/ticket/14320)
-        console.log('Loading loadSuiteList');
+        //console.log('Loading loadSuiteList');
         TestAppUtil.makeJsonRequest(document.location.pathname, {
                 action: 'listsuits'
             },

@@ -1,7 +1,7 @@
 cola.HTMLReporter = function () {
 
     var startingTime = (new Date()).getTime(),
-        log = new Log();
+        log = new Log('HTMLReporter');
 
     var exports = {
         elapsedTime: null,

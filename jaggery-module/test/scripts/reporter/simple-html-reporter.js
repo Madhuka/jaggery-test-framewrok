@@ -1,7 +1,7 @@
 jasmine.simpleHTMLReporter = function () {
 
     var startingTime = (new Date()).getTime(),
-        log = new Log();
+        log = new Log('simpleHTMLReporter');
 
     var exports = {
         elapsedTime: null,
@@ -184,7 +184,7 @@ jasmine.simpleHTMLReporter = function () {
      * @param arguments to console
      */
     var loged = function (arguments) {
-        log.debug(arguments);
+        log.info(arguments);
     };
     return {
         reportSpecResults: reportSpecResults,

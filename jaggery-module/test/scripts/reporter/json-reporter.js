@@ -10,6 +10,7 @@ jasmine.JSONReporter = function () {
         specsFailed: 0,
         suites: []
     },
+
     this.listexports = {
         specsCount: 0,
         specs: []
@@ -63,17 +64,13 @@ jasmine.JSONReporter = function () {
                 name: null,
                 url: null
             };
-            sitex = specs[i];
-            log.info(sitex.description);
-            log.info(sitex.parentSuite);
-            if (sitex.parentSuite) {
-
-                log.info(sitex.parentSuite.description);
-            }
-            log.info(i + '------------------------------------');
-            suit.id = sitex.id;
-            suit.name = sitex.description;
-            suit.fullname = sitex.getFullName();
+            currentSite = specs[i];
+            // log.debug(currentSite.toSource());
+            // log.debug('--------------------'+currentSite.env.currentSpec.toSource());
+            // log.debug('--------------------');
+            suit.id = currentSite.id;
+            suit.name = currentSite.description;
+            suit.fullname = currentSite.getFullName();
             suit.url = encodeURIComponent(suit.fullname);
             listEndPoints[i] = suit;
 
@@ -178,6 +175,6 @@ jasmine.JSONReporter = function () {
      * @param arguments String message to passing for log
      */
     this.loged = function (arguments) {
-        log.info(arguments);
+        log.debug(arguments);
     };
 };
