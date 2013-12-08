@@ -130,9 +130,13 @@ TestApp = new function () {
      * function testPass will handle action after test suite is passed
      */
     this.testPass = function (testID, data) {
-        passCount++;
         $('#err' + testID + '').html('');
-        $('#res' + testID + '').html('<div class="alert alert-success">' + data.suites[0].items[0].message + '</div>');
+        if (data.suites[0].items[0]) {
+            passCount++;
+            $('#res' + testID + '').html('<div class="alert alert-success">' + data.suites[0].items[0].message + '</div>');
+        } else {
+            $('#res' + testID + '').html('<div class="alert alert-info">No Test found</div>');
+        }
     },
 
     /**
