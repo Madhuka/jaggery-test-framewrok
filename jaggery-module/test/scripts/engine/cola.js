@@ -5,18 +5,14 @@ var cola = (function () {
         log = new Log('cola - jaggery test framework'),
         action = null;
 
-    //test spec extension
+    //test specification extension
     var TEST_FILE_EXTENSIOIN = '.js',
         LIST_ACTION = {
             listSuits: 'listsuits',
             listSpecs: 'listspecs'
         };
 
-    /*
-     *Below function will be used as wrapping jsamine and it will be expose
-     *since they are over riding jasmine.
-     * - TO-DO/THINK canhave seperate file for this call 'jasmine wrapper' or make those in later.
-     */
+    
     /**
      *
      * @param func
@@ -42,7 +38,7 @@ var cola = (function () {
     };
 
     /**
-     * overide next_ in jasmine
+     * overriding next_ in jasmine
      */
     jasmine.Queue.prototype.next_ = function () {
         var self = this;
@@ -108,12 +104,12 @@ var cola = (function () {
      */
 
     /**
-     * run is main function that will be called from app test level
-     * this funtion will register the reporter for ENV in jasmine
+     * run is main function that will be called from application test level
+     * this function will register the reporter for ENV in jasmine
      *
      */
     var run = function () {
-        //log.debug(request.getContentType() + 'Called the run for colaaaaaaaaaaa-------' + request.getHeader("User-Agent")+':');
+        //log.debug(request.getContentType() + 'Called the run for cola-------' + request.getHeader("User-Agent")+':');
         //log.debug(request.getRequestURI()+'--------- '+request.getRequestURI().indexOf(".")+'<-->'+request.getRequestURI().length-5);
         //log.debug(request.getRequestURI().indexOf(".") > request.getRequestURI().length-5);
         var jasmineEnv = jasmine.getEnv(),
@@ -201,7 +197,7 @@ var cola = (function () {
     var validatepattern = function (pathMatcher1, pathMatcher2) {
         if (!requireFiles(pathMatcher1)) {
             if (!(requireFiles(pathMatcher2)) && pathMatcher2 && !(isValidPath(pathMatcher1, pathMatcher2)) && request.getContentType()) {
-                log.debug("Path not exsting");
+                log.debug("Path not existing");
                 print({
                     'error': true,
                     'message': 'path \'' + pathMatcher1 + '\' is not valid'
@@ -247,7 +243,7 @@ var cola = (function () {
         log.debug('crawling on root called ' + root);
         var file = new File(root),
             list = file.listFiles();
-        //stop crawlling if error found
+        //stop crawling if error found
         if (list == null || errorFound)
             return;
         try {
@@ -352,7 +348,7 @@ var cola = (function () {
     };
 
     /**
-     * checking client request call 'test Specifcation' in url
+     * checking client request call 'test Specification' in URL
      */
     var getSpecification = function () {
         return specifcation;
@@ -409,7 +405,7 @@ var cola = (function () {
     };
 
     /**
-     * Exposing funtions
+     * Exposing functions
      */
     return {
         run: run,

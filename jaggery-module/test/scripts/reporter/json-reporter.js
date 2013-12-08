@@ -187,7 +187,7 @@ jasmine.JSONReporter = function () {
     },
 
     /**
-     * Will be used to logged in finally/ make this info to get log for jsonreport finally.
+     * Will be used to logged in finally/ make this info to get log for JSON report finally.
      * @param arguments String message to passing for log
      */
     this.loged = function (arguments) {
