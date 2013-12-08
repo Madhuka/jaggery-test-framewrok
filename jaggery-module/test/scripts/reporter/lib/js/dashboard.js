@@ -9,7 +9,7 @@ TestApp = new function () {
     failArray = [];
 
     /**
-     * function is willl be called to run the test
+     * function is will be called to run the test
      */
     this.runTest = function () {
         this.countReset();
@@ -61,7 +61,7 @@ TestApp = new function () {
     },
 
     /**
-     * function will pick all test suit for test spec
+     * function will pick all test suit for test specification
      * @param testSpec - name of testSpec
      */
     this.selectSpec = function (testSpec) {
@@ -81,7 +81,7 @@ TestApp = new function () {
 
 
     /**
-     * function will hanlde test list picker
+     * function will handle test list picker
      * @param checkBox
      */
     this.handleClick = function (checkBox) {
@@ -94,8 +94,8 @@ TestApp = new function () {
     },
 
     /**
-     * function will make ajax call for test
-     * @param testId - test suite ID in dasboard
+     * function will make AJAX call for test
+     * @param testId - test suite ID in dashboard
      */
     this.makeCallToTest = function (testID) {
         $('#basicInfor').html('Test count is ' + testCount + ' running ' + selectedCount + '/' + testCount);
@@ -198,12 +198,17 @@ TestApp = new function () {
             function (html) {
                 if (!html.error) {
 
-                    //templete for suites
+                    //template for suites
                     $('#basicInfor').html('Test count is' + html.specsCount);
-                    var template = '<table class="table table-hover">{{#.}}<tr><td><label> <input type="checkbox" id="chk{{id}}" value="{{url}}" parent="{{parentName}}" onclick="TestApp.handleClick(this)" checked>  {{name}} <b>[{{parentName}}]</b><div id="err{{id}}"></div> <label> </td><td><div id="res{{id}}"></div></td> </tr>{{/.}}<table>';
-                    var htmlx = Mustache.to_html(template, html.specs);
-                    $('#sampleLoc').html(htmlx);
                     testCount = html.specsCount;
+                    if (html.specs) {
+                        var template = '<table class="table table-hover">{{#.}}<tr><td><label> <input type="checkbox" id="chk{{id}}" value="{{url}}" parent="{{parentName}}" onclick="TestApp.handleClick(this)" checked>  {{name}} <b>[{{parentName}}]</b><div id="err{{id}}"></div> <label> </td><td><div id="res{{id}}"></div></td> </tr>{{/.}}<table>';
+                        var htmlx = Mustache.to_html(template, html.specs);
+                        $('#sampleLoc').html(htmlx);
+
+                    } else {
+                        $('#sampleLoc').html('No test Suite is found still');
+                    }
                 } else {
                     TestApp.displayErrorMessage(html.message);
 
@@ -216,7 +221,7 @@ TestApp = new function () {
     };
 
     /**
-     * function will load test Spec List
+     * function will load test Specification List
      */
     this.loadSpecList = function () {
 
