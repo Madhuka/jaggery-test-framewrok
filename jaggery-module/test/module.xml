@@ -11,8 +11,4 @@
         <name>jsonReporter</name>
         <path>scripts/reporter/json-reporter.js</path>
     </script>
-	 <script>
-        <name>simpleHtmlReporter</name>
-        <path>scripts/reporter/simple-html-reporter.js</path>
-    </script>
 </module>
