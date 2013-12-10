@@ -5,7 +5,8 @@ var cola = (function () {
         log = new Log('cola - jaggery test framework'),
         action = null,
         FILELOAD_PATH = 'scripts/reporter/lib/',
-        DASHBOARD_PAGE = 'dashboard.html';
+        DASHBOARD_PAGE = 'dashboard.html',
+        MODULE_PATH = '/modules/test/';
     //test specification extension
     var TEST_FILE_EXTENSIOIN = '.js',
         LIST_ACTION = {
@@ -279,7 +280,7 @@ var cola = (function () {
     var absolute = function (path) {
         var process = require('process');
         var parent = 'file:///' + (process.getProperty('jaggery.home') || process.getProperty('carbon.home')).replace(/[\\]/g, '/').replace(/^[\/]/g, '');
-        return parent + '/modules/test/' + path;
+        return parent + MODULE_PATH + path;
     };
 
     /**

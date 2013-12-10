@@ -1,4 +1,4 @@
-//define test suites
+//define test suites - to test framework 
 describe('TestSuite-JaggeryTestFramework', function () {
 
     it('is defined', function () {
