@@ -149,7 +149,7 @@ TestApp = new function () {
         $('#res' + testID + '').html('<div class="alert alert-danger"> Failed</div>');
         for (var j = 0; l = data.suites[0].itemCount, j < l; j++) {
             if (data.suites[0].items[j].message != 'Passed.') {
-                errMsgList += data.suites[0].items[j].message + '<br>';
+                errMsgList += '['+ (j+1) +' assets] '+data.suites[0].items[j].message+' <br>';
 
             }
         }
