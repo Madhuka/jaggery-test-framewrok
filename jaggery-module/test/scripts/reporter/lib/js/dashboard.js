@@ -133,7 +133,7 @@ TestApp = new function () {
         $('#err' + testID + '').html('');
         if (data.suites[0].items[0]) {
             passCount++;
-            $('#res' + testID + '').html('<div class="alert alert-success">' + data.suites[0].items[0].message + '</div>');
+            $('#res' + testID + '').html('<div class="alert alert-success">Passed</div>');
         } else {
             $('#res' + testID + '').html('<div class="alert alert-info">No Test found</div>');
         }
@@ -146,7 +146,7 @@ TestApp = new function () {
         failCount++;
         failArray.push(testID);
         var errMsgList = '';
-        $('#res' + testID + '').html('<div class="alert alert-danger"> Failed.</div>');
+        $('#res' + testID + '').html('<div class="alert alert-danger"> Failed</div>');
         for (var j = 0; l = data.suites[0].itemCount, j < l; j++) {
             if (data.suites[0].items[j].message != 'Passed.') {
                 errMsgList += data.suites[0].items[j].message + '<br>';
