@@ -1,5 +1,5 @@
 <%
 
-require("test").cola.run();
+require("sugarcane").test.run();
 	
 %>
