@@ -24,7 +24,7 @@ jasmine.JSONReporter = function () {
         this.exports.elapsedTime = parseInt((new Date()).getTime() - startingTime, 10) + "ms";
         var outJson = JSON.stringify(this.exports);
         log.debug(outJson);
-        if (!cola.toListSuites() && !cola.toListSpecs()) {
+        if (!test.toListSuites() && !test.toListSpecs()) {
 
             if (this.exports.specsCount - this.exports.specsPassed !== 0) {
                 this.loged('Exiting with errors');
@@ -46,9 +46,9 @@ jasmine.JSONReporter = function () {
      */
     this.reportRunnerStarting = function (runner) {
         log.debug('reportRunnerStarting with Jasmine --- version' + runner.env.versionString());
-        if (cola.toListSuites()) {
+        if (test.toListSuites()) {
             this.listAllSuites(runner);
-        } else if (cola.toListSpecs()) {
+        } else if (test.toListSpecs()) {
             this.listAllSpecs(runner);
         }
     },
@@ -134,7 +134,7 @@ jasmine.JSONReporter = function () {
      * @param spec is testSpec
      */
     this.reportSpecResults = function (spec) {
-        if (cola.getSpecification() == spec.getFullName() || cola.getSpecification() == null) {
+        if (test.getSpecification() == spec.getFullName() || test.getSpecification() == null) {
             this.exports.specsCount += 1;
 
             if (spec.results().passed()) {

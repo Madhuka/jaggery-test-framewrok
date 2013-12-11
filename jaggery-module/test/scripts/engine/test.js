@@ -1,12 +1,12 @@
-var cola = (function () {
+var test = (function () {
 
     // for test specification name identification
     var specifcation = null,
-        log = new Log('cola - jaggery test framework'),
+        log = new Log('test - sugarcane'),
         action = null,
         FILELOAD_PATH = 'scripts/reporter/lib/',
         DASHBOARD_PAGE = 'dashboard.html',
-        MODULE_PATH = '/modules/test/';
+        MODULE_PATH = '/modules/sugarcane/';
     //test specification extension
     var TEST_FILE_EXTENSIOIN = 'js',
         LIST_ACTION = {
@@ -111,7 +111,7 @@ var cola = (function () {
      *
      */
     var run = function () {
-        log.debug(request.getContentType() + 'Called the run for cola-------' + request.getHeader("User-Agent") + ':');
+        log.debug(request.getContentType() + 'Called the run for test-------' + request.getHeader("User-Agent") + ':');
         var jasmineEnv = jasmine.getEnv();
 
         //text/html --> simpleHTMLReporter removed since AJAX dash-board is using
