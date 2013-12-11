@@ -3,7 +3,7 @@ jaggery-test-framewrok
 
 Test-framework will mainly looking in javascript-unit for jaggery
 
-### How to setup sugarcane in jaggery
+### How to setup sugarcane (RC1) in jaggery
 
 1. Get jaggery server from http://jaggeryjs.org/
 
