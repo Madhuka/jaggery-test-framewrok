@@ -8,7 +8,7 @@ var cola = (function () {
         DASHBOARD_PAGE = 'dashboard.html',
         MODULE_PATH = '/modules/test/';
     //test specification extension
-    var TEST_FILE_EXTENSIOIN = '.js',
+    var TEST_FILE_EXTENSIOIN = 'js',
         LIST_ACTION = {
             listSuits: 'listsuits',
             listSpecs: 'listspecs'
@@ -214,10 +214,10 @@ var cola = (function () {
             isCompleted = true;
             log.debug("is Dir " + path);
             crawl(path);
-        } else if (isExists(path + TEST_FILE_EXTENSIOIN)) {
+        } else if (isExists(path + '.' + TEST_FILE_EXTENSIOIN)) {
             isCompleted = true;
-            log.debug("is File " + path + TEST_FILE_EXTENSIOIN);
-            require(path + TEST_FILE_EXTENSIOIN);
+            log.debug("is File " + path + '.' + TEST_FILE_EXTENSIOIN);
+            require(path + '.' + TEST_FILE_EXTENSIOIN);
         }
         return isCompleted;
     };
@@ -247,7 +247,10 @@ var cola = (function () {
                     crawl(root + '/' + f.getName());
                 } else {
                     log.debug("File:" + f.getName());
-                    require(root + '/' + f.getName());
+                    if (isTestspecFile(f.getName())) {
+                        log.debug("Test File:" + f.getName());
+                        require(root + '/' + f.getName());
+                    }
                 }
 
             }
@@ -278,8 +281,8 @@ var cola = (function () {
      * @param path (file path) module located file path
      */
     var absolute = function (path) {
-        var process = require('process');
-        var parent = 'file:///' + (process.getProperty('jaggery.home') || process.getProperty('carbon.home')).replace(/[\\]/g, '/').replace(/^[\/]/g, '');
+        var systemProcess = require('process');
+        var parent = 'file:///' + (systemProcess.getProperty('jaggery.home') || systemProcess.getProperty('carbon.home')).replace(/[\\]/g, '/').replace(/^[\/]/g, '');
         return parent + MODULE_PATH + path;
     };
 
@@ -356,6 +359,34 @@ var cola = (function () {
         return file.isDirectory();
     };
 
+    /**
+     * function is to checks whether file is test specification file
+     *
+     * @param filename
+     * @returns boolean if files is test specification
+     */
+    var isTestspecFile = function (file) {
+        log.debug('isTestspecFile is called for file ' + file);
+        if (getfileExtension(file) == TEST_FILE_EXTENSIOIN) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    /**
+     * function to get file extension
+     *
+     * @param filename
+     * @returns string of the file extension
+     */
+    var getfileExtension = function (file) {
+        var nameComponents = file.split('.');
+        if (nameComponents.length < 1) {
+            return null;
+        }
+        return nameComponents[nameComponents.length - 1];
+    };
 
     /**
      * file give the name of the file
@@ -387,7 +418,7 @@ var cola = (function () {
      */
     var isValidPath = function (path1, path2) {
         var isValid = false;
-        if ((isDirectory(path2) || isExists(path2 + TEST_FILE_EXTENSIOIN)) && !(isDirectory(path1) || isExists(path1 + TEST_FILE_EXTENSIOIN))) {
+        if ((isDirectory(path2) || isExists(path2 + '.' + TEST_FILE_EXTENSIOIN)) && !(isDirectory(path1) || isExists(path1 + '.' + TEST_FILE_EXTENSIOIN))) {
             log.debug('Current URL - path is validated for testspec name.');
             isValid = true;
         }
