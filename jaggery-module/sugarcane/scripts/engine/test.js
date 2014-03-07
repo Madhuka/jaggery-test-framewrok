@@ -28,7 +28,7 @@ var test = (function () {
         // replace to id for this.env.currentSpec.suite.description
 
         //checking 'listSpecs' is called then do not added all in to execution list for to skip it.
-        if (spec && action != LIST_ACTION.listSuits && action != LIST_ACTION.listSpecs) {
+        if (this.env.currentSpec.suite.queue.env.currentSpec.getFullName() == spec && action != LIST_ACTION.listSuits && action != LIST_ACTION.listSpecs) {
             this.addToQueue(block);
             //  } else if (this.env.currentSpec.suite.queue.env.currentSpec.id == spec) { 1.1V //checking for ID 
         } else if (this.env.currentSpec.suite.queue.env.currentSpec.getFullName() == spec) {
